@@ -1,0 +1,2892 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blocco Operatorio Dragonstone - Dashboard Completa</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        /* ==========================================
+        DASHBOARD DRAGONSTONE - CSS UNIFICATO
+        ========================================== */
+
+        /* BASE RESET */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+        }
+
+        /* ==========================================
+        NAVIGATION STYLES
+        ========================================== */
+        .main-nav {
+            position: sticky;
+            top: 0;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            padding: 20px;
+            z-index: 1000;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            border-bottom: 3px solid #3498db;
+        }
+
+        .nav-brand {
+            color: white;
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            background: transparent;
+            color: white;
+            border: 2px solid #34495e;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-button:hover {
+            background: #3498db;
+            border-color: #3498db;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .nav-button.active {
+            background: #e74c3c;
+            border-color: #e74c3c;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        /* ==========================================
+        SECTION LAYOUT
+        ========================================== */
+        .dashboard-section {
+            display: none;
+            padding: 20px;
+            min-height: calc(100vh - 120px);
+        }
+
+        .dashboard-section.active {
+            display: block;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        /* ==========================================
+        HEADERS & TITLES
+        ========================================== */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 4px solid #2c3e50;
+            padding-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 3em;
+            margin-bottom: 15px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header .subtitle {
+            color: #e74c3c;
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .header .date {
+            color: #7f8c8d;
+            font-size: 1em;
+            font-style: italic;
+        }
+
+        .section-title {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 25px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ==========================================
+        SECTION CONTAINERS
+        ========================================== */
+        .section {
+            margin-bottom: 50px;
+            background: white;
+            border-radius: 15px;
+            padding: 35px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-left: 6px solid var(--section-color, #3498db);
+        }
+
+        .section.timing { --section-color: #e74c3c; }
+        .section.infrastructure { --section-color: #f39c12; }
+        .section.specialita { --section-color: #9b59b6; }
+        .section.recommendations { --section-color: #27ae60; }
+
+        /* ==========================================
+        ALERT BOXES
+        ========================================== */
+        .crisis-alert, .critical-alert, .mapping-alert, .critical-findings {
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            text-align: center;
+            box-shadow: 0 15px 30px rgba(231, 76, 60, 0.3);
+            border: 3px solid #c0392b;
+        }
+
+        .crisis-alert {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .critical-alert {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .mapping-alert {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            box-shadow: 0 10px 25px rgba(243, 156, 18, 0.3);
+        }
+
+        .critical-findings {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            box-shadow: 0 10px 25px rgba(155, 89, 182, 0.3);
+        }
+
+        .crisis-alert h2, .critical-alert h2, .mapping-alert h2, .critical-findings h2 {
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ==========================================
+        STATS & METRICS GRIDS
+        ========================================== */
+        .crisis-stats, .stats, .findings-grid, .mapping-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .crisis-stat, .critical-stat, .finding-card, .mapping-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .crisis-stat .value, .critical-stat .value, .finding-value, .mapping-card .number {
+            font-size: 2.8em;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .crisis-stat .label, .critical-stat .label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        /* ==========================================
+        KPI CARDS
+        ========================================== */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid #667eea;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .kpi-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .kpi-label {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ==========================================
+        PROBLEMS & INSIGHTS GRIDS
+        ========================================== */
+        .problems-grid, .insights-grid, .anomalie-list, .specialita-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .problem-card, .insight-card, .anomalia-card, .specialita-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--urgency-color, #3498db);
+            position: relative;
+        }
+
+        .problem-card.critica, .specialita-card.alta-priorita { --urgency-color: #e74c3c; }
+        .problem-card.alta, .specialita-card.media-priorita { --urgency-color: #f39c12; }
+        .problem-card.media, .specialita-card.bassa-priorita { --urgency-color: #3498db; }
+
+        .urgency-badge, .priority-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .urgency-critica, .priority-alta { background: #f8d7da; color: #721c24; }
+        .urgency-alta, .priority-media { background: #fff3cd; color: #856404; }
+        .urgency-media, .priority-bassa { background: #cce5ff; color: #004085; }
+
+        .problem-title, .insight-title, .anomalia-title, .specialita-name {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 12px;
+        }
+
+        .problem-description, .insight-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .impact-metric {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        /* ==========================================
+        INSIGHT CARDS SPECIFIC
+        ========================================== */
+        .insight-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .insight-card.critical {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .insight-card.warning {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+
+        .insight-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        /* Fix text color in insight cards */
+        .insight-card .insight-title,
+        .insight-card .insight-description {
+            color: white !important;
+        }
+
+        /* ==========================================
+        ANOMALIE CARDS
+        ========================================== */
+        .anomalia-card {
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            border-left: 5px solid #e53e3e;
+        }
+
+        .anomalia-value {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        /* ==========================================
+        CHARTS CONTAINERS - FIXED DIMENSIONS
+        ========================================== */
+        .chart-grid, .timing-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .chart-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            height: 400px;
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .chart-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            height: 400px;
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .chart-container canvas {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+
+        /* ==========================================
+        TABLES
+        ========================================== */
+        .specialita-table, .mobility-table, .benchmark-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .specialita-table th, .mobility-table th, .benchmark-table th,
+        .specialita-table td, .mobility-table td, .benchmark-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .specialita-table th, .mobility-table th, .benchmark-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .percentage-bar {
+            background: #ecf0f1;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .percentage-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        /* ==========================================
+        SPECIALITÀ TIMING TABLE
+        ========================================== */
+        .specialita-timing {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .specialita-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            padding: 15px 20px;
+            border-bottom: 1px solid #ecf0f1;
+            align-items: center;
+        }
+
+        .specialita-row:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .specialita-row.header {
+            background: #2c3e50;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* ==========================================
+        BADGES & INDICATORS
+        ========================================== */
+        .timing-badge, .mobility-badge, .sala-badge, .utilization-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9em;
+            display: inline-block;
+        }
+
+        .timing-good, .mobility-bassa { background: #d4edda; color: #155724; }
+        .timing-warning, .mobility-media { background: #fff3cd; color: #856404; }
+        .timing-danger, .mobility-alta { background: #f8d7da; color: #721c24; }
+
+        .badge-dedicata { background: #d4edda; color: #155724; }
+        .badge-prevalente { background: #fff3cd; color: #856404; }
+        .badge-condivisa { background: #cce5ff; color: #004085; }
+
+        .util-alta { background: #f8d7da; color: #721c24; }
+        .util-media { background: #fff3cd; color: #856404; }
+        .util-bassa { background: #d1ecf1; color: #0c5460; }
+
+        /* ==========================================
+        WEEKLY PATTERNS
+        ========================================== */
+        .weekly-pattern, .weekly-heatmap {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .weekly-heatmap {
+            grid-template-columns: repeat(6, 1fr);
+        }
+
+        .day-card, .heatmap-cell {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #667eea;
+        }
+
+        .day-card.problema {
+            border-left-color: #e74c3c;
+            background: #fff5f5;
+        }
+
+        .day-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .day-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .day-stat {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .day-stat .value {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .heatmap-cell {
+            padding: 10px;
+            font-size: 0.85em;
+        }
+
+        .heatmap-header {
+            background: #2c3e50;
+            color: white;
+            font-weight: 600;
+        }
+
+        .heatmap-low { background: #d4edda; color: #155724; }
+        .heatmap-medium { background: #fff3cd; color: #856404; }
+        .heatmap-high { background: #f8d7da; color: #721c24; }
+
+        /* ==========================================
+        INFRASTRUCTURE SPECIFIC
+        ========================================== */
+        .capacity-summary, .sale-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .capacity-card, .sala-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sala-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--accent-color, #3498db);
+        }
+
+        .sala-card.alta { --accent-color: #e74c3c; }
+        .sala-card.media { --accent-color: #f39c12; }
+        .sala-card.bassa { --accent-color: #95a5a6; }
+
+        .capacity-value, .sala-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .capacity-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .sala-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sala-stat {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .sala-stat .value {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        /* ==========================================
+        SPECIALITÀ METRICS
+        ========================================== */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .metric {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .metric-value {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 0.8em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .problemi-list {
+            margin-bottom: 15px;
+        }
+
+        .problema-tag {
+            display: inline-block;
+            background: #f8d7da;
+            color: #721c24;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            margin: 2px;
+        }
+
+        .opportunita-tag {
+            display: inline-block;
+            background: #d4edda;
+            color: #155724;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            margin: 2px;
+        }
+
+        .performance-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .perf-excellent { background: #27ae60; }
+        .perf-good { background: #f39c12; }
+        .perf-poor { background: #e74c3c; }
+
+        /* ==========================================
+        DATA QUALITY
+        ========================================== */
+        .quality-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .quality-item {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+
+        .quality-percentage {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .quality-good { color: #27ae60; }
+        .quality-warning { color: #f39c12; }
+        .quality-poor { color: #e74c3c; }
+
+        /* ==========================================
+        ROI & RECOMMENDATIONS
+        ========================================== */
+        .roi-section {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            border-radius: 15px;
+            padding: 35px;
+            margin-bottom: 40px;
+        }
+
+        .roi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .roi-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .roi-value {
+            font-size: 2.5em;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .roi-label {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        .recommendations-timeline {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .recommendation-item {
+            display: grid;
+            grid-template-columns: 60px 1fr 120px 120px;
+            gap: 20px;
+            padding: 25px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 6px solid var(--priority-color);
+            align-items: center;
+        }
+
+        .recommendation-item.priority-1 { --priority-color: #e74c3c; }
+        .recommendation-item.priority-2 { --priority-color: #f39c12; }
+        .recommendation-item.priority-3 { --priority-color: #f1c40f; }
+        .recommendation-item.priority-4 { --priority-color: #3498db; }
+        .recommendation-item.priority-5 { --priority-color: #9b59b6; }
+
+        .priority-number {
+            font-size: 2.5em;
+            font-weight: 800;
+            color: var(--priority-color);
+            text-align: center;
+        }
+
+        .recommendation-content h3 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 1.2em;
+        }
+
+        .recommendation-content p {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .benefit-tag {
+            background: #d4edda;
+            color: #155724;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .timeline-badge {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .cost-badge {
+            background: #fff3e0;
+            color: #ef6c00;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* ==========================================
+        SUCCESS METRICS
+        ========================================== */
+        .success-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .metric-category {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            border-top: 4px solid var(--category-color);
+        }
+
+        .metric-category.timing-metrics { --category-color: #e74c3c; }
+        .metric-category.capacity-metrics { --category-color: #f39c12; }
+        .metric-category.specialita-metrics { --category-color: #9b59b6; }
+        .metric-category.sistema-metrics { --category-color: #27ae60; }
+
+        .metric-category h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .metric-list {
+            list-style: none;
+        }
+
+        .metric-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .metric-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* ==========================================
+        FOOTER CTA
+        ========================================== */
+        .footer-cta {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .footer-cta h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .footer-cta p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* ==========================================
+        RESPONSIVE DESIGN
+        ========================================== */
+        @media (max-width: 768px) {
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-button {
+                width: 200px;
+                margin: 5px 0;
+            }
+            
+            .dashboard-container {
+                margin: 10px;
+                padding: 20px;
+            }
+            
+            .chart-grid, .timing-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .recommendation-item {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .weekly-pattern {
+                grid-template-columns: 1fr;
+            }
+            
+            .weekly-heatmap {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .section-title {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ==========================================
+         NAVIGATION MENU
+         ========================================== -->
+    <nav class="main-nav">
+        <div class="nav-brand">🏥 Blocco Operatorio Dragonstone</div>
+        <div class="nav-buttons">
+            <button class="nav-button active" onclick="showSection('executive')">Executive Summary</button>
+            <button class="nav-button" onclick="showSection('overview')">Overview & Data Quality</button>
+            <button class="nav-button" onclick="showSection('timing')">Timing Analysis</button>
+            <button class="nav-button" onclick="showSection('infrastructure')">Infrastructure</button>
+            <button class="nav-button" onclick="showSection('specialita')">Specialità Analysis</button>
+        </div>
+    </nav>
+
+    <!-- ==========================================
+         SEZIONE 1: EXECUTIVE SUMMARY
+         ========================================== -->
+    <div id="executive" class="dashboard-section active">
+        <div class="dashboard-container">
+            <div class="header">
+                <h1>🏥 Executive Summary</h1>
+                <div class="subtitle">BLOCCO OPERATORIO DRAGONSTONE - ANALYSIS & RECOMMENDATIONS</div>
+                <div class="date">Analisi Operativa | Giugno 2025 | MIMS Group Consultation</div>
+            </div>
+            
+            <!-- Crisis Alert -->
+            <div class="crisis-alert">
+                <h2>⚠️ SISTEMA IN STRESS OPERATIVO CRITICO</h2>
+                <p style="font-size: 1.2em; margin-bottom: 20px;">
+                    Analisi dei dati operativi rivela inefficienze sistemiche con impatto significativo su produttività e qualità assistenziale
+                </p>
+                <div class="crisis-stats">
+                    <div class="crisis-stat">
+                        <div class="value">95%</div>
+                        <div class="label">Primi interventi<br>in ritardo</div>
+                    </div>
+                    <div class="crisis-stat">
+                        <div class="value">2h</div>
+                        <div class="label">Tempo produttivo<br>perso/giorno</div>
+                    </div>
+                    <div class="crisis-stat">
+                        <div class="value">44%</div>
+                        <div class="label">Utilizzo medio sale<br>(vs 75% target)</div>
+                    </div>
+                    <div class="crisis-stat">
+                        <div class="value">76%</div>
+                        <div class="label">Variabilità UROLOGIA<br>(vs 30% target)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Problemi Sistemici -->
+            <div class="section timing">
+                <h2 class="section-title">🚨 Problemi Sistemici Identificati</h2>
+                <div class="problems-grid">
+                    <div class="problem-card critica">
+                        <div class="urgency-badge urgency-critica">CRITICA</div>
+                        <div class="problem-title">TIMING SISTEMICO</div>
+                        <div class="problem-description">
+                            95% dei primi interventi inizia in ritardo rispetto alla programmazione 8:00. 
+                            Sistema di scheduling completamente inefficace.
+                        </div>
+                        <div class="impact-metric">
+                            💥 IMPATTO: 98 minuti persi ogni giorno
+                        </div>
+                    </div>
+                    
+                    <div class="problem-card alta">
+                        <div class="urgency-badge urgency-alta">ALTA</div>
+                        <div class="problem-title">INFRASTRUCTURE CHAOS</div>
+                        <div class="problem-description">
+                            3 sale "fantasma" non documentate + squilibrio estremo: Sala 4 sovraccarica (103%) 
+                            mentre Sala 8 quasi inutilizzata (1%).
+                        </div>
+                        <div class="impact-metric">
+                            📊 IMPATTO: 44% utilizzo vs 75% target - 40% capacity sprecata
+                        </div>
+                    </div>
+                    
+                    <div class="problem-card alta">
+                        <div class="urgency-badge urgency-alta">ALTA</div>
+                        <div class="problem-title">SPECIALITÀ FRAMMENTATE</div>
+                        <div class="problem-description">
+                            4/5 specialità con variabilità >50% CV. CHIRURGIA dispersa su 6 sale diverse. 
+                            Solo ORL ha sala dedicata.
+                        </div>
+                        <div class="impact-metric">
+                            🔀 IMPATTO: Coordinamento esponenzialmente complesso
+                        </div>
+                    </div>
+                    
+                    <div class="problem-card media">
+                        <div class="urgency-badge urgency-media">MEDIA</div>
+                        <div class="problem-title">DATA QUALITY</div>
+                        <div class="problem-description">
+                            69% dei dati tempo anestesia mancanti. Sistema di raccolta dati incompleto 
+                            limita analisi efficienza dettagliate.
+                        </div>
+                        <div class="impact-metric">
+                            📋 IMPATTO: Analisi performance limitate
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ROI Analysis -->
+            <div class="roi-section">
+                <h2 style="font-size: 2em; margin-bottom: 15px; text-align: center;">💰 ROI & IMPACT ANALYSIS</h2>
+                <p style="text-align: center; font-size: 1.2em; opacity: 0.9;">
+                    Investimento principalmente organizzativo con ritorno rapido e misurabile
+                </p>
+                <div class="roi-grid">
+                    <div class="roi-card">
+                        <div class="roi-value">+40%</div>
+                        <div class="roi-label">Capacity boost<br>senza nuove risorse</div>
+                    </div>
+                    <div class="roi-card">
+                        <div class="roi-value">2+ ore</div>
+                        <div class="roi-label">Tempo produttivo<br>recuperabile/giorno</div>
+                    </div>
+                    <div class="roi-card">
+                        <div class="roi-value">3-6 mesi</div>
+                        <div class="roi-label">Payback period<br>investimento</div>
+                    </div>
+                    <div class="roi-card">
+                        <div class="roi-value">BASSO</div>
+                        <div class="roi-label">Risk level<br>implementazione</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Raccomandazioni Prioritarie -->
+            <div class="section recommendations">
+                <h2 class="section-title">🎯 Raccomandazioni Prioritarie</h2>
+                <div class="recommendations-timeline">
+                    <div class="recommendation-item priority-1">
+                        <div class="priority-number">1</div>
+                        <div class="recommendation-content">
+                            <h3>TIMING SISTEMICO</h3>
+                            <p>Riprogrammazione orari inizio da 8:00 a 9:00-9:30 per allinearsi alla realtà operativa</p>
+                            <span class="benefit-tag">Elimina 95% ritardi + recupera 98min/giorno</span>
+                        </div>
+                        <div class="timeline-badge">1-2 settimane</div>
+                        <div class="cost-badge">NULLO</div>
+                    </div>
+                    
+                    <div class="recommendation-item priority-2">
+                        <div class="priority-number">2</div>
+                        <div class="recommendation-content">
+                            <h3>INFRASTRUCTURE REBALANCING</h3>
+                            <p>Redistribuzione carico da Sala 4 (103%) verso sale sottoutilizzate</p>
+                            <span class="benefit-tag">Ottimizza capacity + riduce stress operativo</span>
+                        </div>
+                        <div class="timeline-badge">1 mese</div>
+                        <div class="cost-badge">BASSO</div>
+                    </div>
+                    
+                    <div class="recommendation-item priority-3">
+                        <div class="priority-number">3</div>
+                        <div class="recommendation-content">
+                            <h3>SPECIALITÀ CONSOLIDAMENTO</h3>
+                            <p>CHIRURGIA: riduzione da 6 a 2-3 sale dedicate + gestione tasso urgenze</p>
+                            <span class="benefit-tag">Riduce frammentazione + migliora coordinamento</span>
+                        </div>
+                        <div class="timeline-badge">2-3 mesi</div>
+                        <div class="cost-badge">MEDIO</div>
+                    </div>
+                    
+                    <div class="recommendation-item priority-4">
+                        <div class="priority-number">4</div>
+                        <div class="recommendation-content">
+                            <h3>TURN-OVER OPTIMIZATION</h3>
+                            <p>Team dedicato sanificazione + protocolli standardizzati</p>
+                            <span class="benefit-tag">Riduce turn-over da 33 a 20 min target</span>
+                        </div>
+                        <div class="timeline-badge">3-4 settimane</div>
+                        <div class="cost-badge">MEDIO</div>
+                    </div>
+                    
+                    <div class="recommendation-item priority-5">
+                        <div class="priority-number">5</div>
+                        <div class="recommendation-content">
+                            <h3>STANDARDIZZAZIONE SPECIALITÀ</h3>
+                            <p>Protocolli tempi UROLOGIA per ridurre variabilità da 76% a <40%</p>
+                            <span class="benefit-tag">Programmazione accurata + prevedibilità</span>
+                        </div>
+                        <div class="timeline-badge">2-4 mesi</div>
+                        <div class="cost-badge">BASSO</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Success Metrics -->
+            <div class="section">
+                <h2 class="section-title">📈 Metriche di Success</h2>
+                <div class="success-metrics">
+                    <div class="metric-category timing-metrics">
+                        <h4>🕐 TIMING</h4>
+                        <ul class="metric-list">
+                            <li>% primi interventi in orario (target: >80%)</li>
+                            <li>Ritardo medio primo intervento (target: <30min)</li>
+                            <li>Turn-over medio (target: 20±5min)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="metric-category capacity-metrics">
+                        <h4>🏗️ CAPACITY</h4>
+                        <ul class="metric-list">
+                            <li>Utilizzo medio sale (target: 70-80%)</li>
+                            <li>Bilanciamento carico (max sala <90%)</li>
+                            <li>N° sale attive documentate</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="metric-category specialita-metrics">
+                        <h4>🏥 SPECIALITÀ</h4>
+                        <ul class="metric-list">
+                            <li>CV medio specialità (target: <40%)</li>
+                            <li>N° sale per specialità (target: ≤3)</li>
+                            <li>% urgenze per specialità (monitoring)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="metric-category sistema-metrics">
+                        <h4>⚙️ SISTEMA</h4>
+                        <ul class="metric-list">
+                            <li>Data quality score (target: >90%)</li>
+                            <li>Coordinamento score (survey staff)</li>
+                            <li>Tempo ciclo paziente (end-to-end)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Implementation Timeline Chart -->
+            <div class="section">
+                <h2 class="section-title">📅 Timeline Implementazione</h2>
+                <div class="chart-container">
+                    <canvas id="execTimelineChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Best Practices -->
+            <div class="section">
+                <h2 class="section-title">🏆 Best Practices Identificate</h2>
+                <div class="problems-grid">
+                    <div class="problem-card" style="border-left-color: #27ae60;">
+                        <div class="problem-title" style="color: #27ae60;">MODELLO ORL</div>
+                        <div class="problem-description">
+                            <strong>Sala dedicata + programmazione stabile</strong><br>
+                            100% concentrazione su Sala 2, variabilità controllata, scheduling semplificato.
+                            Modello replicabile per altre specialità ad alto volume.
+                        </div>
+                        <div class="impact-metric" style="background: #d4edda; color: #155724;">
+                            ✅ BENEFICI: Coordinamento ottimale + efficienza 100%
+                        </div>
+                    </div>
+                    
+                    <div class="problem-card" style="border-left-color: #27ae60;">
+                        <div class="problem-title" style="color: #27ae60;">VARIABILITÀ ORTOPEDIA</div>
+                        <div class="problem-description">
+                            <strong>CV 42% vs 76% UROLOGIA</strong><br>
+                            Migliore standardizzazione protocolli risulta in tempi più prevedibili. 
+                            Approach replicabile per ridurre variabilità sistemica.
+                        </div>
+                        <div class="impact-metric" style="background: #d4edda; color: #155724;">
+                            ✅ BENEFICI: Programmazione accurata + prevedibilità
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Next Steps -->
+            <div class="footer-cta">
+                <h2>🚀 NEXT STEPS IMMEDIATI</h2>
+                <p>
+                    <strong>RACCOMANDAZIONE:</strong> Implementazione immediata delle prime 3 priorità per massimizzare impact nel breve termine.<br><br>
+                    
+                    <strong>FASE 1 (1-4 settimane):</strong> Timing sistemico + Infrastructure rebalancing<br>
+                    <strong>FASE 2 (1-3 mesi):</strong> Specialità consolidamento + Turn-over optimization<br>
+                    <strong>FASE 3 (2-4 mesi):</strong> Standardizzazione specialità + Success metrics tracking<br><br>
+                    
+                    <strong>ROI ATTESO:</strong> 40% capacity boost + 2 ore produttive/giorno con payback 3-6 mesi
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         SEZIONE 2: OVERVIEW & DATA QUALITY
+         ========================================== -->
+    <div id="overview" class="dashboard-section">
+        <div class="dashboard-container">
+            <div class="header">
+                <h1>🏥 Blocco Operatorio Dragonstone</h1>
+                <div class="subtitle">Executive Overview & Data Quality Assessment</div>
+            </div>
+            
+            <!-- KPI Cards -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-value">455</div>
+                    <div class="kpi-label">Totale Interventi</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">35</div>
+                    <div class="kpi-label">Giorni Analisi</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">10</div>
+                    <div class="kpi-label">Sale Operative</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">5</div>
+                    <div class="kpi-label">Specialità</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">91</div>
+                    <div class="kpi-label">Min Medi Intervento</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">13</div>
+                    <div class="kpi-label">Interventi/Giorno</div>
+                </div>
+            </div>
+            
+            <!-- Data Quality Section -->
+            <div class="section">
+                <h2 class="section-title">📊 Data Quality Assessment</h2>
+                <div class="quality-grid">
+                    <div class="quality-item">
+                        <div class="quality-percentage quality-good">100%</div>
+                        <div>Tempi Intervento</div>
+                    </div>
+                    <div class="quality-item">
+                        <div class="quality-percentage quality-poor">31%</div>
+                        <div>Tempi Anestesia</div>
+                    </div>
+                    <div class="quality-item">
+                        <div class="quality-percentage quality-good">100%</div>
+                        <div>Orari Sala</div>
+                    </div>
+                </div>
+                <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin-top: 20px;">
+                    <strong>⚠️ Alert:</strong> 69% dei dati di tempo anestesia mancanti - questo limita alcune analisi di efficienza
+                </div>
+            </div>
+            
+            <!-- Specialità Performance -->
+            <div class="section">
+                <h2 class="section-title">🏥 Performance per Specialità</h2>
+                <table class="specialita-table">
+                    <thead>
+                        <tr>
+                            <th>Specialità</th>
+                            <th>N° Interventi</th>
+                            <th>% del Totale</th>
+                            <th>Tempo Medio (min)</th>
+                            <th>Distribuzione</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>UROLOGIA</strong></td>
+                            <td>156</td>
+                            <td>34%</td>
+                            <td>91</td>
+                            <td>
+                                <div class="percentage-bar">
+                                    <div class="percentage-fill" style="width: 34%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>ORTOPEDIA E TRAUMATOLOGIA</strong></td>
+                            <td>104</td>
+                            <td>23%</td>
+                            <td>101</td>
+                            <td>
+                                <div class="percentage-bar">
+                                    <div class="percentage-fill" style="width: 23%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>OSTETRICIA E GINECOLOGIA</strong></td>
+                            <td>83</td>
+                            <td>18%</td>
+                            <td>81</td>
+                            <td>
+                                <div class="percentage-bar">
+                                    <div class="percentage-fill" style="width: 18%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>CHIRURGIA GENERALE</strong></td>
+                            <td>73</td>
+                            <td>16%</td>
+                            <td>91</td>
+                            <td>
+                                <div class="percentage-bar">
+                                    <div class="percentage-fill" style="width: 16%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>OTORINOLARINGOIATRIA</strong></td>
+                            <td>39</td>
+                            <td>9%</td>
+                            <td>82</td>
+                            <td>
+                                <div class="percentage-bar">
+                                    <div class="percentage-fill" style="width: 9%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Charts Section -->
+            <div class="section">
+                <h2 class="section-title">📈 Distribuzione Interventi</h2>
+                <div class="chart-grid">
+                    <div class="chart-box">
+                        <canvas id="overviewSpecialitaChart"></canvas>
+                    </div>
+                    <div class="chart-box">
+                        <canvas id="overviewTipoInterventoChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Anomalie Section -->
+            <div class="section">
+                <h2 class="section-title">⚠️ Anomalie Rilevate</h2>
+                <div class="anomalie-list">
+                    <div class="anomalia-card">
+                        <div class="anomalia-title">Sale Extra</div>
+                        <div class="anomalia-value">3 sale</div>
+                        <div style="margin-top: 10px; color: #666;">Sale 8, 9, 11 non documentate nel caso (teoriche: 1-7)</div>
+                    </div>
+                    <div class="anomalia-card">
+                        <div class="anomalia-title">Operazioni Weekend</div>
+                        <div class="anomalia-value">12 interventi</div>
+                        <div style="margin-top: 10px; color: #666;">Solo 2.6% del volume totale nel weekend</div>
+                    </div>
+                    <div class="anomalia-card">
+                        <div class="anomalia-title">Dati Anestesia Mancanti</div>
+                        <div class="anomalia-value">69%</div>
+                        <div style="margin-top: 10px; color: #666;">314 su 455 record senza tempo anestesia</div>
+                    </div>
+                    <div class="anomalia-card">
+                        <div class="anomalia-title">Tasso Urgenze</div>
+                        <div class="anomalia-value">11%</div>
+                        <div style="margin-top: 10px; color: #666;">Da verificare se coerente con le "false urgenze" del caso</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analisi Approfondita Dataset -->
+            <div class="section">
+                <h2 class="section-title">🔍 Analisi Approfondita Dataset</h2>
+                <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; line-height: 1.6;">
+                    <h4 style="color: #2c3e50; margin-bottom: 15px;">Distribuzione Temporale</h4>
+                    <p>L'analisi dei 455 interventi su 35 giorni rivela una distribuzione non uniforme con picchi significativi il giovedì (108 interventi) e una riduzione marcata nel weekend (solo 12 interventi, 2.6%). Il volume medio di 13 interventi/giorno è concentrato nei giorni feriali con pattern ricorrenti.</p>
+                    
+                    <h4 style="color: #2c3e50; margin: 20px 0 15px;">Composizione Case Mix</h4>
+                    <p>Il 73% degli interventi è in elezione (331/455), seguiti da urgenze 11% (51) e libera professione 10% (44). Il tasso di urgenze dell'11% richiede validazione rispetto alle "false urgenze" segnalate nel caso, suggerendo possibili inefficienze nel sistema di classificazione.</p>
+                    
+                    <h4 style="color: #2c3e50; margin: 20px 0 15px;">Efficienza Operativa</h4>
+                    <p>Tutte le specialità mostrano efficienza >100% (CHIRURGIA 130%, GINECOLOGIA 129%, UROLOGIA 126%), indicando sottostima sistematica dei tempi programmati. Questo paradosso efficienza-ritardi suggerisce problemi nel sistema di scheduling piuttosto che nella performance clinica.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         SEZIONE 3: TIMING ANALYSIS - COMPLETA
+         ========================================== -->
+    <div id="timing" class="dashboard-section">
+        <div class="dashboard-container">
+            <div class="header">
+                <h1>⏰ Timing & Scheduling Analysis</h1>
+                <div class="subtitle">CRITICAL ISSUES IDENTIFIED - IMMEDIATE ACTION REQUIRED</div>
+            </div>
+            
+            <!-- Critical Alert -->
+            <div class="critical-alert">
+                <h2>🚨 ALERT CRITICO: Sistema di Scheduling Completamente Compromesso</h2>
+                <p>I dati rivelano un collasso sistemico nella puntualità delle prime sedute operatorie</p>
+                <div class="stats">
+                    <div class="critical-stat">
+                        <div class="value">95%</div>
+                        <div>Primi interventi in ritardo</div>
+                    </div>
+                    <div class="critical-stat">
+                        <div class="value">98 min</div>
+                        <div>Ritardo medio dalla programmazione</div>
+                    </div>
+                    <div class="critical-stat">
+                        <div class="value">33 min</div>
+                        <div>Turn-over medio tra interventi</div>
+                    </div>
+                    <div class="critical-stat">
+                        <div class="value">138/146</div>
+                        <div>Primi interventi oltre le 8:00</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Timing Analysis -->
+            <div class="section">
+                <h2 class="section-title">📊 Analisi Dettagliata dei Ritardi</h2>
+                <div class="timing-grid">
+                    <div class="chart-container">
+                        <canvas id="timingRitardiChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="timingOrariChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Analisi Causa-Effetto -->
+            <div class="section">
+                <h2 class="section-title">📈 Analisi Causa-Effetto Ritardi</h2>
+                <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; line-height: 1.6;">
+                    <h4 style="color: #e74c3c; margin-bottom: 15px;">Root Cause Analysis</h4>
+                    <p><strong>Primo Intervento (8:00 programmato):</strong> Solo 8/146 primi interventi (5%) iniziano in orario. La concentrazione maggiore è alle 8:00 (104 casi) ma tutti in ritardo, suggerendo che il problema non è l'orario ma il sistema organizzativo che precede l'avvio.</p>
+                    
+                    <h4 style="color: #f39c12; margin: 20px 0 15px;">Cascade Effect</h4>
+                    <p><strong>Effetto Domino:</strong> Il ritardo del primo intervento (98 min medi) si propaga sull'intera giornata. Con turn-over di 33 min vs standard 15-20, ogni ritardo iniziale viene amplificato del +65% durante la giornata operatoria.</p>
+                    
+                    <h4 style="color: #9b59b6; margin: 20px 0 15px;">Pattern Specialità</h4>
+                    <p><strong>Sistematicità del Problema:</strong> Nessuna specialità sotto 90% ritardi (ORL 100%, GINECOLOGIA 97%, CHIRURGIA 96%) dimostra che il problema è infrastrutturale, non dipendente dalle singole équipe mediche.</p>
+                    
+                    <h4 style="color: #27ae60; margin: 20px 0 15px;">Impatto Economico</h4>
+                    <p><strong>Costo Opportunità:</strong> 98 min/giorno × 5 giorni = 8.2 ore/settimana di tempo sala perso solo per primi ritardi. Con costo sala €500/ora stimato = €4,100/settimana = €213,000/anno di perdita diretta.</p>
+                </div>
+            </div>
+            
+            <!-- Performance per Specialità -->
+            <div class="section">
+                <h2 class="section-title">🏥 Performance Timing per Specialità</h2>
+                <div class="specialita-timing">
+                    <div class="specialita-row header">
+                        <div>Specialità</div>
+                        <div>Orario Medio</div>
+                        <div>% Ritardi</div>
+                        <div>Ritardo Medio</div>
+                    </div>
+                    <div class="specialita-row">
+                        <div class="specialita-name">UROLOGIA</div>
+                        <div>11:50</div>
+                        <div><span class="timing-badge timing-danger">92%</span></div>
+                        <div>104 min</div>
+                    </div>
+                    <div class="specialita-row">
+                        <div class="specialita-name">CHIRURGIA GENERALE</div>
+                        <div>11:53</div>
+                        <div><span class="timing-badge timing-danger">96%</span></div>
+                        <div>107 min</div>
+                    </div>
+                    <div class="specialita-row">
+                        <div class="specialita-name">GINECOLOGIA</div>
+                        <div>12:14</div>
+                        <div><span class="timing-badge timing-danger">97%</span></div>
+                        <div>156 min</div>
+                    </div>
+                    <div class="specialita-row">
+                        <div class="specialita-name">ORTOPEDIA</div>
+                        <div>10:51</div>
+                        <div><span class="timing-badge timing-danger">94%</span></div>
+                        <div>53 min</div>
+                    </div>
+                    <div class="specialita-row">
+                        <div class="specialita-name">ORL</div>
+                        <div>10:54</div>
+                        <div><span class="timing-badge timing-danger">100%</span></div>
+                        <div>28 min</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pattern Settimanali -->
+            <div class="section">
+                <h2 class="section-title">📅 Pattern Settimanali</h2>
+                <div class="weekly-pattern">
+                    <div class="day-card problema">
+                        <div class="day-name">LUNEDÌ</div>
+                        <div class="day-stats">
+                            <div class="day-stat">Interventi: <span class="value">87</span></div>
+                            <div class="day-stat">Ritardi: <span class="value">89%</span></div>
+                            <div class="day-stat">Orario medio: <span class="value">11:42</span></div>
+                        </div>
+                    </div>
+                    <div class="day-card problema">
+                        <div class="day-name">MARTEDÌ</div>
+                        <div class="day-stats">
+                            <div class="day-stat">Interventi: <span class="value">93</span></div>
+                            <div class="day-stat">Ritardi: <span class="value">100%</span></div>
+                            <div class="day-stat">Orario medio: <span class="value">11:48</span></div>
+                        </div>
+                    </div>
+                    <div class="day-card problema">
+                        <div class="day-name">MERCOLEDÌ</div>
+                        <div class="day-stats">
+                            <div class="day-stat">Interventi: <span class="value">75</span></div>
+                            <div class="day-stat">Ritardi: <span class="value">96%</span></div>
+                            <div class="day-stat">Orario medio: <span class="value">11:45</span></div>
+                        </div>
+                    </div>
+                    <div class="day-card problema">
+                        <div class="day-name">GIOVEDÌ</div>
+                        <div class="day-stats">
+                            <div class="day-stat">Interventi: <span class="value">108</span></div>
+                            <div class="day-stat">Ritardi: <span class="value">97%</span></div>
+                            <div class="day-stat">Orario medio: <span class="value">11:51</span></div>
+                        </div>
+                    </div>
+                    <div class="day-card problema">
+                        <div class="day-name">VENERDÌ</div>
+                        <div class="day-stats">
+                            <div class="day-stat">Interventi: <span class="value">80</span></div>
+                            <div class="day-stat">Ritardi: <span class="value">95%</span></div>
+                            <div class="day-stat">Orario medio: <span class="value">11:39</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Turn-over Analysis -->
+            <div class="section">
+                <h2 class="section-title">🔄 Analisi Turn-over tra Interventi</h2>
+                <div class="timing-grid">
+                    <div style="display: flex; flex-direction: column; justify-content: center; padding: 40px; text-align: center; background: #f8f9fa; border-radius: 15px;">
+                        <div style="font-size: 4em; color: #e74c3c; margin-bottom: 20px;">⏱️</div>
+                        <div style="font-size: 2.5em; font-weight: 700; color: #2c3e50; margin-bottom: 10px;">33 minuti</div>
+                        <div style="color: #666; font-size: 1.1em;">Turn-over medio tra interventi</div>
+                        <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 10px; color: #856404;">
+                            <strong>Benchmark ottimale: 15-20 minuti</strong><br>
+                            Attuale performance: +65% sopra il target
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="timingTurnoverChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Insights Actionable -->
+            <div class="section">
+                <h2 class="section-title">💡 Insights Critici & Azioni Immediate</h2>
+                <div class="insights-grid">
+                    <div class="insight-card critical">
+                        <div class="insight-icon">🚨</div>
+                        <div class="insight-title">Collasso Scheduling</div>
+                        <div class="insight-description">
+                            95% dei primi interventi inizia in ritardo. Il sistema di programmazione 8:00 è completamente inefficace.
+                        </div>
+                    </div>
+                    <div class="insight-card critical">
+                        <div class="insight-icon">⏰</div>
+                        <div class="insight-title">Perdita Massiva di Tempo</div>
+                        <div class="insight-description">
+                            98 minuti di ritardo medio = 1.6 ore perse ogni giorno per prima seduta. Impatto su intera giornata.
+                        </div>
+                    </div>
+                    <div class="insight-card warning">
+                        <div class="insight-icon">🔄</div>
+                        <div class="insight-title">Turn-over Inefficiente</div>
+                        <div class="insight-description">
+                            33 minuti di turn-over vs. 15-20 standard. Il problema "sanificazione lenta" è confermato dai dati.
+                        </div>
+                    </div>
+                    <div class="insight-card critical">
+                        <div class="insight-icon">🏥</div>
+                        <div class="insight-title">Tutte le Specialità Coinvolte</div>
+                        <div class="insight-description">
+                            Nessuna specialità sotto il 90% di ritardi. Il problema è sistemico, non legato a singole équipe.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Raccomandazioni -->
+            <div class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <h2 style="color: white; border-bottom: 2px solid rgba(255,255,255,0.3);">🎯 Raccomandazioni Immediate</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                        <h3 style="margin-bottom: 15px;">1. Riprogrammazione Orari</h3>
+                        <p>Spostare inizio programmato a 9:00-9:30 per allinearsi alla realtà operativa attuale</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                        <h3 style="margin-bottom: 15px;">2. Ottimizzazione Turn-over</h3>
+                        <p>Implementare team dedicato sanificazione e protocolli standardizzati per ridurre a 20 min</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                        <h3 style="margin-bottom: 15px;">3. Monitoraggio Real-time</h3>
+                        <p>Sistema di tracking automatico per identificare ritardi e bottleneck in tempo reale</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         SEZIONE 4: INFRASTRUCTURE - COMPLETA
+         ========================================== -->
+    <div id="infrastructure" class="dashboard-section">
+        <div class="dashboard-container">
+            <div class="header">
+                <h1>🏗️ Infrastructure & Capacity Analysis</h1>
+                <div class="subtitle">DISCREPANZE CRITICHE NELL'ALLOCAZIONE RISORSE</div>
+            </div>
+            
+            <!-- Mapping Alert -->
+            <div class="mapping-alert">
+                <h2>⚠️ DISCREPANZA INFRASTRUTTURALE RILEVATA</h2>
+                <p>I dati operativi mostrano 10 sale attive vs. 7 teoriche documentate nel caso</p>
+                <div class="mapping-comparison">
+                    <div class="mapping-card">
+                        <div class="number">7</div>
+                        <div>Sale Teoriche<br>(da documentazione)</div>
+                    </div>
+                    <div class="mapping-card">
+                        <div class="number">10</div>
+                        <div>Sale Effettive<br>(da dati operativi)</div>
+                    </div>
+                    <div class="mapping-card">
+                        <div class="number">3</div>
+                        <div>Sale Extra<br>(8, 9, 11)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Capacity Summary -->
+            <div class="section">
+                <h2 class="section-title">📊 Summary Utilizzo Capacity</h2>
+                <div class="capacity-summary">
+                    <div class="capacity-card">
+                        <div class="capacity-value">44%</div>
+                        <div class="capacity-label">Utilizzo Medio Sale</div>
+                    </div>
+                    <div class="capacity-card">
+                        <div class="capacity-value">3</div>
+                        <div class="capacity-label">Sale Alta Utilization</div>
+                    </div>
+                    <div class="capacity-card">
+                        <div class="capacity-value">6</div>
+                        <div class="capacity-label">Sale Dedicate</div>
+                    </div>
+                    <div class="capacity-card">
+                        <div class="capacity-value">4</div>
+                        <div class="capacity-label">Sale Condivise</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sale Performance -->
+            <div class="section">
+                <h2 class="section-title">🏥 Performance Individual Sale</h2>
+                <div class="sale-grid">
+                    <!-- Sala 4 - Top Performer -->
+                    <div class="sala-card alta">
+                        <div class="sala-number">4</div>
+                        <div class="sala-stats">
+                            <div class="sala-stat">Volume: <span class="value">105 interventi</span></div>
+                            <div class="sala-stat">Utilizzo: <span class="value">103%</span></div>
+                            <div class="sala-stat">Specialità: <span class="value">3</span></div>
+                            <div class="sala-stat">Dominante: <span class="value">UROLOGIA</span></div>
+                        </div>
+                        <div class="sala-badge badge-prevalente">PREVALENTE</div>
+                        <div class="utilization-badge util-alta">SOVRACCARICA</div>
+                    </div>
+                    
+                    <!-- Sala 3 -->
+                    <div class="sala-card alta">
+                        <div class="sala-number">3</div>
+                        <div class="sala-stats">
+                            <div class="sala-stat">Volume: <span class="value">84 interventi</span></div>
+                            <div class="sala-stat">Utilizzo: <span class="value">91%</span></div>
+                            <div class="sala-stat">Specialità: <span class="value">4</span></div>
+                            <div class="sala-stat">Dominante: <span class="value">UROLOGIA</span></div>
+                        </div>
+                        <div class="sala-badge badge-prevalente">PREVALENTE</div>
+                        <div class="utilization-badge util-alta">ALTA</div>
+                    </div>
+                    
+                    <!-- Sala 5 -->
+                    <div class="sala-card alta">
+                        <div class="sala-number">5</div>
+                        <div class="sala-stats">
+                            <div class="sala-stat">Volume: <span class="value">75 interventi</span></div>
+                            <div class="sala-stat">Utilizzo: <span class="value">90%</span></div>
+                            <div class="sala-stat">Specialità: <span class="value">1</span></div>
+                            <div class="sala-stat">Dominante: <span class="value">ORTOPEDIA</span></div>
+                        </div>
+                        <div class="sala-badge badge-dedicata">DEDICATA</div>
+                        <div class="utilization-badge util-alta">ALTA</div>
+                    </div>
+                    
+                    <!-- Sala 2 -->
+                    <div class="sala-card media">
+                        <div class="sala-number">2</div>
+                        <div class="sala-stats">
+                            <div class="sala-stat">Volume: <span class="value">67 interventi</span></div>
+                            <div class="sala-stat">Utilizzo: <span class="value">63%</span></div>
+                            <div class="sala-stat">Specialità: <span class="value">3</span></div>
+                            <div class="sala-stat">Dominante: <span class="value">ORL</span></div>
+                        </div>
+                        <div class="sala-badge badge-condivisa">CONDIVISA</div>
+                        <div class="utilization-badge util-media">MEDIA</div>
+                    </div>
+                    
+                    <!-- Sala 7 -->
+                    <div class="sala-card media">
+                        <div class="sala-number">7</div>
+                        <div class="sala-stats">
+                            <div class="sala-stat">Volume: <span class="value">60 interventi</span></div>
+                            <div class="sala-stat">Utilizzo: <span class="value">56%</span></div>
+                            <div class="sala-stat">Specialità: <span class="value">1</span></div>
+                            <div class="sala-stat">Dominante: <span class="value">GINECOLOGIA</span></div>
+                        </div>
+                        <div class="sala-badge badge-dedicata">DEDICATA</div>
+                        <div class="utilization-badge util-media">MEDIA</div>
+                    </div>
+                    
+                    <!-- Sale Minori -->
+                    <div class="sala-card bassa">
+                        <div class="sala-number">1</div>
+                        <div class="sala-stats">
+                            <div class="sala-stat">Volume: <span class="value">26 interventi</span></div>
+                            <div class="sala-stat">Utilizzo: <span class="value">30%</span></div>
+                            <div class="sala-stat">Specialità: <span class="value">2</span></div>
+                        </div>
+                        <div class="sala-badge badge-condivisa">CONDIVISA</div>
+                        <div class="utilization-badge util-bassa">SOTTOUTILIZZATA</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Charts Section -->
+            <div class="section">
+                <h2 class="section-title">📈 Analisi Capacity & Distribuzione</h2>
+                <div class="chart-grid">
+                    <div class="chart-container">
+                        <canvas id="infraCapacityChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="infraVolumeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Analisi Approfondita -->
+            <div class="section">
+                <h2 class="section-title">🔍 Analisi Allocation & Optimization</h2>
+                <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; line-height: 1.6;">
+                    <h4 style="color: #e74c3c; margin-bottom: 15px;">Squilibrio Critico</h4>
+                    <p><strong>Concentrazione vs Dispersione:</strong> Le prime 3 sale (4,3,5) gestiscono il 57% del volume totale (264/455 interventi) mentre le ultime 3 sale (9,11,8) solo il 5% (23 interventi). Sala 4 al 103% capacità vs Sala 8 all'1% rappresenta il massimo spreco di risorse.</p>
+                    
+                    <h4 style="color: #f39c12; margin: 20px 0 15px;">Sale "Fantasma" Impact</h4>
+                    <p><strong>Discrepanza Documentale:</strong> Sale 8,9,11 operative ma non documentate nel caso rappresentano 23 interventi (5% volume). Questa discrepanza suggerisce problemi di governance e controllo delle risorse infrastrutturali.</p>
+                    
+                    <h4 style="color: #2c3e50; margin: 20px 0 15px;">Opportunity Cost</h4>
+                    <p><strong>Potenziale Non Sfruttato:</strong> Con 44% utilizzo medio vs 75% target, il sistema ha capacità per +40% volume (182 interventi aggiuntivi) senza investimenti. Redistribuendo il carico da Sala 4 (-13%) a sale sottoutilizzate (+30% ciascuna), si ottimizza l'intero sistema.</p>
+                    
+                    <h4 style="color: #9b59b6; margin: 20px 0 15px;">Specialization Strategy</h4>
+                    <p><strong>Modello Sala Dedicata:</strong> ORL con sala dedicata (100% Sala 2) mostra coordinamento ottimale. Replicando questo modello per GINECOLOGIA (Sala 7, 72% concentrazione) e consolidando CHIRURGIA da 6 a 2-3 sale, si riduce complessità gestionale.</p>
+                </div>
+            </div>
+            
+            <!-- Mobility Analysis -->
+            <div class="section">
+                <h2 class="section-title">🔄 Cross-Utilization Specialità</h2>
+                <table class="mobility-table">
+                    <thead>
+                        <tr>
+                            <th>Specialità</th>
+                            <th>Sale Utilizzate</th>
+                            <th>Sala Principale</th>
+                            <th>Concentrazione</th>
+                            <th>Mobility</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>ORTOPEDIA & TRAUMATOLOGIA</strong></td>
+                            <td>5</td>
+                            <td>Sala 5</td>
+                            <td>72%</td>
+                            <td><span class="mobility-badge mobility-alta">ALTA</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>CHIRURGIA GENERALE</strong></td>
+                            <td>6</td>
+                            <td>Sala 8</td>
+                            <td>51%</td>
+                            <td><span class="mobility-badge mobility-alta">ALTA</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>UROLOGIA</strong></td>
+                            <td>4</td>
+                            <td>Sala 4</td>
+                            <td>43%</td>
+                            <td><span class="mobility-badge mobility-alta">ALTA</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>GINECOLOGIA</strong></td>
+                            <td>3</td>
+                            <td>Sala 7</td>
+                            <td>72%</td>
+                            <td><span class="mobility-badge mobility-media">MEDIA</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>OTORINOLARINGOIATRIA</strong></td>
+                            <td>1</td>
+                            <td>Sala 2</td>
+                            <td>100%</td>
+                            <td><span class="mobility-badge mobility-bassa">BASSA</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Insights -->
+            <div class="section">
+                <h2 class="section-title">💡 Infrastructure Insights</h2>
+                <div class="insights-grid">
+                    <div class="insight-card warning">
+                        <div class="insight-icon">🏗️</div>
+                        <div class="insight-title">Sale "Fantasma"</div>
+                        <div class="insight-description">
+                            3 sale operative (8,9,11) non documentate nel caso. Necessaria ricognizione infrastructure completa.
+                        </div>
+                    </div>
+                    <div class="insight-card critical">
+                        <div class="insight-icon">⚖️</div>
+                        <div class="insight-title">Squilibrio Utilizzo</div>
+                        <div class="insight-description">
+                            Sala 4 sovraccarica (103%) mentre Sala 8,9 sottoutilizzate (<15%). Redistribuzione necessaria.
+                        </div>
+                    </div>
+                    <div class="insight-card warning">
+                        <div class="insight-icon">🔄</div>
+                        <div class="insight-title">Alta Mobility</div>
+                        <div class="insight-description">
+                            3 specialità usano 4+ sale. Coordinamento complesso e potenziali inefficienze scheduling.
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon">📊</div>
+                        <div class="insight-title">Capacity Sottoutilizzata</div>
+                        <div class="insight-description">
+                            44% utilizzo medio vs. target 70-80%. Potenziale per +40% volume senza nuove risorse.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Raccomandazioni -->
+            <div class="section" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); color: white;">
+                <h2 style="color: white; border-bottom: 2px solid rgba(255,255,255,0.3);">🎯 Raccomandazioni Infrastructure</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                        <h3 style="margin-bottom: 15px;">1. Mapping Completo</h3>
+                        <p>Ricognizione fisica sale 8,9,11 e aggiornamento documentazione infrastructure</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                        <h3 style="margin-bottom: 15px;">2. Rebalancing Carico</h3>
+                        <p>Redistribuire volume da Sala 4 (103%) verso sale sottoutilizzate</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                        <h3 style="margin-bottom: 15px;">3. Standardizzazione Utilizzo</h3>
+                        <p>Definire allocation policy per specialità multi-sala e ridurre mobility inefficiente</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         SEZIONE 5: SPECIALITÀ ANALYSIS - COMPLETA
+         ========================================== -->
+    <div id="specialita" class="dashboard-section">
+        <div class="dashboard-container">
+            <div class="header">
+                <h1>🏥 Specialità Deep Dive Analysis</h1>
+                <div class="subtitle">VARIABILITÀ CRITICA E FRAMMENTAZIONE SISTEMICA</div>
+            </div>
+            
+            <!-- Critical Findings -->
+            <div class="critical-findings">
+                <h2>🚨 FINDINGS CRITICI SPECIALITÀ</h2>
+                <p>Sistema caratterizzato da alta variabilità, frammentazione sale e inefficienze organizzative</p>
+                <div class="findings-grid">
+                    <div class="finding-card">
+                        <div class="finding-value">76%</div>
+                        <div>Variabilità UROLOGIA<br>(Target: <30%)</div>
+                    </div>
+                    <div class="finding-card">
+                        <div class="finding-value">4/5</div>
+                        <div>Specialità con<br>Alta Variabilità</div>
+                    </div>
+                    <div class="finding-card">
+                        <div class="finding-value">6</div>
+                        <div>Sale utilizzate da<br>CHIRURGIA GENERALE</div>
+                    </div>
+                    <div class="finding-card">
+                        <div class="finding-value">1/5</div>
+                        <div>Specialità con<br>Sala Dedicata</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Performance Overview per Specialità -->
+            <div class="section">
+                <h2 class="section-title">📊 Performance Overview Specialità</h2>
+                <div class="specialita-grid">
+                    <!-- UROLOGIA -->
+                    <div class="specialita-card media-priorita">
+                        <div class="priority-badge priority-media">MEDIA</div>
+                        <div class="specialita-name">UROLOGIA</div>
+                        <div class="metrics-grid">
+                            <div class="metric">
+                                <div class="metric-value">156</div>
+                                <div class="metric-label">Interventi (34%)</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">91±69</div>
+                                <div class="metric-label">Minuti (CV: 76%)</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">126%</div>
+                                <div class="metric-label">Efficienza</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">4</div>
+                                <div class="metric-label">Sale Utilizzate</div>
+                            </div>
+                        </div>
+                        <div class="problemi-list">
+                            <span class="problema-tag">Alta variabilità tempi</span>
+                            <span class="problema-tag">Frammentazione sale</span>
+                        </div>
+                        <div>
+                            <span class="opportunita-tag">Alta efficienza</span>
+                            <span class="opportunita-tag">Programmazione stabile</span>
+                        </div>
+                    </div>
+                    
+                    <!-- ORTOPEDIA -->
+                    <div class="specialita-card media-priorita">
+                        <div class="priority-badge priority-media">MEDIA</div>
+                        <div class="specialita-name">ORTOPEDIA & TRAUMATOLOGIA</div>
+                        <div class="metrics-grid">
+                            <div class="metric">
+                                <div class="metric-value">104</div>
+                                <div class="metric-label">Interventi (23%)</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">101±42</div>
+                                <div class="metric-label">Minuti (CV: 42%)</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">100%</div>
+                                <div class="metric-label">Efficienza</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">5</div>
+                                <div class="metric-label">Sale Utilizzate</div>
+                            </div>
+                        </div>
+                        <div class="problemi-list">
+                            <span class="problema-tag">Frammentazione sale</span>
+                        </div>
+                        <div>
+                            <span class="opportunita-tag">Alta efficienza</span>
+                            <span class="opportunita-tag">Variabilità migliore</span>
+                        </div>
+                    </div>
+                    
+                    <!-- GINECOLOGIA -->
+                    <div class="specialita-card media-priorita">
+                        <div class="priority-badge priority-media">MEDIA</div>
+                        <div class="specialita-name">GINECOLOGIA</div>
+                        <div class="metrics-grid">
+                            <div class="metric">
+                                <div class="metric-value">83</div>
+                                <div class="metric-label">Interventi (18%)</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">81±50</div>
+                                <div class="metric-label">Minuti (CV: 62%)</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">129%</div>
+                                <div class="metric-label">Efficienza</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">3</div>
+                                <div class="metric-label">Sale Utilizzate</div>
+                            </div>
+                        </div>
+                        <div class="problemi-list">
+                            <span class="problema-tag">Alta variabilità tempi</span>
+                        </div>
+                        <div>
+                            <span class="opportunita-tag">Alta efficienza</span>
+                            <span class="opportunita-tag">Tempi medi bassi</span>
+                        </div>
+                    </div>
+                    
+                    <!-- CHIRURGIA GENERALE -->
+                    <div class="specialita-card alta-priorita">
+                        <div class="priority-badge priority-alta">ALTA</div>
+                        <div class="specialita-name">CHIRURGIA GENERALE</div>
+                        <div class="metrics-grid">
+                            <div class="metric">
+                                <div class="metric-value">73</div>
+                                <div class="metric-label">Interventi (16%)</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">91±47</div>
+                                <div class="metric-label">Minuti (CV: 52%)</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">130%</div>
+                                <div class="metric-label">Efficienza</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">6</div>
+                                <div class="metric-label">Sale Utilizzate</div>
+                            </div>
+                        </div>
+                        <div class="problemi-list">
+                            <span class="problema-tag">Alta variabilità tempi</span>
+                            <span class="problema-tag">Tasso urgenze elevato</span>
+                            <span class="problema-tag">Frammentazione sale</span>
+                        </div>
+                        <div>
+                            <span class="opportunita-tag">Alta efficienza</span>
+                        </div>
+                    </div>
+                    
+                    <!-- ORL -->
+                    <div class="specialita-card media-priorita">
+                        <div class="priority-badge priority-media">MEDIA</div>
+                        <div class="specialita-name">OTORINOLARINGOIATRIA</div>
+                        <div class="metrics-grid">
+                            <div class="metric">
+                                <div class="metric-value">39</div>
+                                <div class="metric-label">Interventi (9%)</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">82±51</div>
+                                <div class="metric-label">Minuti (CV: 62%)</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">100%</div>
+                                <div class="metric-label">Efficienza</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">1</div>
+                                <div class="metric-label">Sale Utilizzate</div>
+                            </div>
+                        </div>
+                        <div class="problemi-list">
+                            <span class="problema-tag">Alta variabilità tempi</span>
+                        </div>
+                        <div>
+                            <span class="opportunita-tag">Alta efficienza</span>
+                            <span class="opportunita-tag">Sala dedicata</span>
+                            <span class="opportunita-tag">Programmazione stabile</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Charts Analysis -->
+            <div class="section">
+                <h2 class="section-title">📈 Analisi Performance Cross-Specialità</h2>
+                <div class="chart-grid">
+                    <div class="chart-container">
+                        <canvas id="specVariabilitaChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="specCaseMixChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Analisi Approfondita -->
+            <div class="section">
+                <h2 class="section-title">🔬 Analisi Performance & Variabilità</h2>
+                <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; line-height: 1.6;">
+                    <h4 style="color: #e74c3c; margin-bottom: 15px;">Variabilità Critica</h4>
+                    <p><strong>UROLOGIA (76% CV):</strong> Leader di volume (156 interventi, 34%) ma worst performer in variabilità. Range 91±69 min significa interventi da 22 a 160 minuti, rendendo programmazione accurata impossibile. Urgente standardizzazione protocolli per specialità chiave.</p>
+                    
+                    <h4 style="color: #27ae60; margin: 20px 0 15px;">Best Practice: ORTOPEDIA</h4>
+                    <p><strong>Modello di Riferimento (42% CV):</strong> Migliore bilanciamento volume/variabilità. Pur usando 5 sale, mantiene controllo operativo. Tempi 101±42 min più prevedibili permettono scheduling efficace. Protocolli replicabili per altre specialità.</p>
+                    
+                    <h4 style="color: #f39c12; margin: 20px 0 15px;">CHIRURGIA: Priorità Alta</h4>
+                    <p><strong>Frammentazione Massima:</strong> Unica specialità "Alta Priorità" per convergenza di fattori critici: 6 sale utilizzate, 52% variabilità, 22% tasso urgenze (vs 3-13% altre). Consolidamento su 2-3 sale dedicate ridurrebbe coordinamento esponenziale.</p>
+                    
+                    <h4 style="color: #3498db; margin: 20px 0 15px;">Efficiency Paradox</h4>
+                    <p><strong>Sottostima Sistemica:</strong> Tutte specialità >100% efficienza nonostante alta variabilità indica tempi programmati cronicamente sottostimati. Non problema di performance medica ma di sistema gestionale che non incorpora variabilità reale.</p>
+                    
+                    <h4 style="color: #9b59b6; margin: 20px 0 15px;">Weekly Patterns</h4>
+                    <p><strong>Distribuzione Asimmetrica:</strong> UROLOGIA picco giovedì (50 vs 13-34 altri giorni), CHIRURGIA concentrata lunedì (32). Pattern suggeriscono preferenze organizzative piuttosto che cliniche, creando bottleneck prevedibili.</p>
+                </div>
+            </div>
+            
+            <!-- Benchmark Table -->
+            <div class="section">
+                <h2 class="section-title">🏆 Benchmarking Specialità</h2>
+                <table class="benchmark-table">
+                    <thead>
+                        <tr>
+                            <th>Specialità</th>
+                            <th>Volume</th>
+                            <th>Tempo Medio</th>
+                            <th>Variabilità</th>
+                            <th>Efficienza</th>
+                            <th>Sale</th>
+                            <th>Performance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>UROLOGIA</strong></td>
+                            <td>156 (34%)</td>
+                            <td>91 min</td>
+                            <td>76% CV</td>
+                            <td>126%</td>
+                            <td>4</td>
+                            <td><span class="performance-indicator perf-good"></span>Leader Volume</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ORTOPEDIA</strong></td>
+                            <td>104 (23%)</td>
+                            <td>101 min</td>
+                            <td>42% CV</td>
+                            <td>100%</td>
+                            <td>5</td>
+                            <td><span class="performance-indicator perf-excellent"></span>Best Variabilità</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GINECOLOGIA</strong></td>
+                            <td>83 (18%)</td>
+                            <td>81 min</td>
+                            <td>62% CV</td>
+                            <td>129%</td>
+                            <td>3</td>
+                            <td><span class="performance-indicator perf-good"></span>Tempo Minimo</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CHIRURGIA GEN.</strong></td>
+                            <td>73 (16%)</td>
+                            <td>91 min</td>
+                            <td>52% CV</td>
+                            <td>130%</td>
+                            <td>6</td>
+                            <td><span class="performance-indicator perf-excellent"></span>Max Efficienza</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ORL</strong></td>
+                            <td>39 (9%)</td>
+                            <td>82 min</td>
+                            <td>62% CV</td>
+                            <td>100%</td>
+                            <td>1</td>
+                            <td><span class="performance-indicator perf-excellent"></span>Sala Dedicata</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Weekly Patterns Heatmap -->
+            <div class="section">
+                <h2 class="section-title">📅 Pattern Settimanali per Specialità</h2>
+                <div class="weekly-heatmap">
+                    <div class="heatmap-cell heatmap-header">Specialità</div>
+                    <div class="heatmap-cell heatmap-header">LUN</div>
+                    <div class="heatmap-cell heatmap-header">MAR</div>
+                    <div class="heatmap-cell heatmap-header">MER</div>
+                    <div class="heatmap-cell heatmap-header">GIO</div>
+                    <div class="heatmap-cell heatmap-header">VEN</div>
+                    
+                    <div class="heatmap-cell heatmap-header">UROLOGIA</div>
+                    <div class="heatmap-cell heatmap-medium">34</div>
+                    <div class="heatmap-cell heatmap-medium">28</div>
+                    <div class="heatmap-cell heatmap-low">13</div>
+                    <div class="heatmap-cell heatmap-high">50</div>
+                    <div class="heatmap-cell heatmap-medium">22</div>
+                    
+                    <div class="heatmap-cell heatmap-header">ORTOPEDIA</div>
+                    <div class="heatmap-cell heatmap-high">39</div>
+                    <div class="heatmap-cell heatmap-medium">25</div>
+                    <div class="heatmap-cell heatmap-medium">19</div>
+                    <div class="heatmap-cell heatmap-low">14</div>
+                    <div class="heatmap-cell heatmap-medium">18</div>
+                    
+                    <div class="heatmap-cell heatmap-header">GINECOLOGIA</div>
+                    <div class="heatmap-cell heatmap-low">2</div>
+                    <div class="heatmap-cell heatmap-medium">20</div>
+                    <div class="heatmap-cell heatmap-high">25</div>
+                    <div class="heatmap-cell heatmap-medium">15</div>
+                    <div class="heatmap-cell heatmap-medium">12</div>
+                    
+                    <div class="heatmap-cell heatmap-header">CHIRURGIA</div>
+                    <div class="heatmap-cell heatmap-high">32</div>
+                    <div class="heatmap-cell heatmap-low">2</div>
+                    <div class="heatmap-cell heatmap-medium">18</div>
+                    <div class="heatmap-cell heatmap-medium">15</div>
+                    <div class="heatmap-cell heatmap-medium">15</div>
+                    
+                    <div class="heatmap-cell heatmap-header">ORL</div>
+                    <div class="heatmap-cell heatmap-low">0</div>
+                    <div class="heatmap-cell heatmap-medium">8</div>
+                    <div class="heatmap-cell heatmap-low">3</div>
+                    <div class="heatmap-cell heatmap-high">20</div>
+                    <div class="heatmap-cell heatmap-medium">8</div>
+                </div>
+            </div>
+            
+            <!-- Strategic Insights -->
+            <div class="section">
+                <h2 class="section-title">💡 Strategic Insights & Actions</h2>
+                <div class="insights-grid">
+                    <div class="insight-card critical">
+                        <div class="insight-icon">⚠️</div>
+                        <div class="insight-title">Variabilità Sistemica</div>
+                        <div class="insight-description">
+                            4/5 specialità oltre soglia critica (50% CV). UROLOGIA worst performer (76%). Standardizzazione urgente.
+                        </div>
+                    </div>
+                    <div class="insight-card warning">
+                        <div class="insight-icon">🔀</div>
+                        <div class="insight-title">Frammentazione Sale</div>
+                        <div class="insight-description">
+                            CHIRURGIA su 6 sale, ORTOPEDIA su 5. Solo ORL modello "dedicata". Consolidamento necessario.
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon">📊</div>
+                        <div class="insight-title">Efficiency Paradox</div>
+                        <div class="insight-description">
+                            Tutte >100% efficienza MA alta variabilità. Tempi programmati sottostimati sistematicamente.
+                        </div>
+                    </div>
+                    <div class="insight-card critical">
+                        <div class="insight-icon">🚨</div>
+                        <div class="insight-title">CHIRURGIA Priority</div>
+                        <div class="insight-description">
+                            Unica specialità "Alta Priorità": 22% urgenze, 6 sale, variabilità 52%. Intervento immediato.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Raccomandazioni -->
+            <div class="section" style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); color: white;">
+                <h2 style="color: white; border-bottom: 2px solid rgba(255,255,255,0.3);">🎯 Raccomandazioni per Specialità</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                        <h3 style="margin-bottom: 15px;">1. UROLOGIA - Standardizzazione</h3>
+                        <p>Protocolli tempi per ridurre CV da 76% a <40%. Focus su volume leader per massimo impatto.</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                        <h3 style="margin-bottom: 15px;">2. CHIRURGIA - Consolidamento</h3>
+                        <p>Ridurre da 6 a 2-3 sale dedicate. Gestire tasso urgenze (22% vs 3-13% altre).</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                        <h3 style="margin-bottom: 15px;">3. ORL - Modello Replicabile</h3>
+                        <p>Estendere approccio "sala dedicata" ad altre specialità per ridurre frammentazione.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         JAVASCRIPT NAVIGATION + CHARTS - UNIFICATO E PULITO
+         ========================================== -->
+    <script>
+        // Navigation function
+        function showSection(sectionId) {
+            // Nascondi tutte le sezioni
+            document.querySelectorAll('.dashboard-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Mostra sezione selezionata
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Aggiorna bottoni menu
+            document.querySelectorAll('.nav-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // ==========================================
+        // NAVIGATION + CHART INITIALIZATION - FIXED
+        // ==========================================
+        
+        // Navigation function
+        function showSection(sectionId) {
+            // Nascondi tutte le sezioni
+            document.querySelectorAll('.dashboard-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Mostra sezione selezionata
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Aggiorna bottoni menu
+            document.querySelectorAll('.nav-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+            
+            // Forza resize dei chart quando sezione diventa visibile
+            setTimeout(() => {
+                window.dispatchEvent(new Event('resize'));
+            }, 100);
+        }
+
+        // Chart instances storage
+        let chartInstances = {};
+
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // ========== TIMING ANALYSIS CHARTS - FIXED DIMENSIONS ==========
+            
+            // Timing Ritardi Chart
+            const timingRitardiCtx = document.getElementById('timingRitardiChart');
+            if (timingRitardiCtx) {
+                chartInstances.timingRitardi = new Chart(timingRitardiCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['IN ORARIO (<8:00)', 'RITARDO (>8:00)'],
+                        datasets: [{
+                            data: [8, 138],
+                            backgroundColor: ['#27ae60', '#e74c3c'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1.2,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Puntualità Primi Interventi - CRISIS LEVEL',
+                                font: { size: 16, weight: 'bold' },
+                                color: '#e74c3c'
+                            },
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Timing Orari Chart - FIXED SIZE
+            const timingOrariCtx = document.getElementById('timingOrariChart');
+            if (timingOrariCtx) {
+                chartInstances.timingOrari = new Chart(timingOrariCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00+'],
+                        datasets: [{
+                            label: 'N° Primi Interventi',
+                            data: [3, 104, 9, 9, 1, 2, 18],
+                            backgroundColor: [
+                                '#27ae60', '#e74c3c', '#e74c3c', '#e74c3c', '#c0392b', '#8e44ad', '#2c3e50'
+                            ],
+                            borderRadius: 6,
+                            maxBarThickness: 40
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1.5,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Orari Inizio - Sistema 8:00 Fallito',
+                                font: { size: 16, weight: 'bold' }
+                            },
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Numero Primi Interventi'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Orario Effettivo'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Timing Turnover Chart (Ritardi per Specialità) - FIXED SIZE  
+            const timingTurnoverCtx = document.getElementById('timingTurnoverChart');
+            if (timingTurnoverCtx) {
+                chartInstances.timingTurnover = new Chart(timingTurnoverCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['ORL', 'ORTOPEDIA', 'CHIRURGIA', 'UROLOGIA', 'GINECOLOGIA'],
+                        datasets: [{
+                            label: '% Ritardi',
+                            data: [100, 94, 96, 92, 97],
+                            backgroundColor: [
+                                '#c0392b', '#e74c3c', '#e74c3c', '#e74c3c', '#e74c3c'
+                            ],
+                            borderRadius: 6,
+                            maxBarThickness: 50
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1.5,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Ritardi per Specialità',
+                                font: { size: 16, weight: 'bold' }
+                            },
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                title: {
+                                    display: true,
+                                    text: '% Ritardi'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // ========== INFRASTRUCTURE CHARTS - FORCE VISIBILITY ==========
+            
+            // Forza visibilità temporanea per rendering chart
+            const infraSection = document.getElementById('infrastructure');
+            const originalDisplay = infraSection.style.display;
+            infraSection.style.display = 'block';
+            infraSection.style.visibility = 'hidden';
+            infraSection.style.position = 'absolute';
+            infraSection.style.top = '-9999px';
+
+            // Infrastructure Capacity Chart
+            const infraCapacityCtx = document.getElementById('infraCapacityChart');
+            if (infraCapacityCtx) {
+                chartInstances.infraCapacity = new Chart(infraCapacityCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Sala 4', 'Sala 3', 'Sala 5', 'Sala 2', 'Sala 7', 'Sala 6', 'Sala 9', 'Sala 11', 'Sala 1', 'Sala 8'],
+                        datasets: [{
+                            label: 'Utilizzo %',
+                            data: [71, 62, 62, 43, 38, 10, 10, 3, 1, 1],
+                            backgroundColor: [
+                                '#f39c12', '#f39c12', '#f39c12', '#95a5a6', '#95a5a6', 
+                                '#95a5a6', '#95a5a6', '#95a5a6', '#e74c3c', '#e74c3c'
+                            ],
+                            borderRadius: 6,
+                            maxBarThickness: 45
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1.5,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Capacity Utilization - SQUILIBRIO CRITICO',
+                                font: { size: 16, weight: 'bold' },
+                                color: '#e74c3c'
+                            },
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 80,
+                                title: {
+                                    display: true,
+                                    text: 'Utilizzo %'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Infrastructure Volume Chart
+            const infraVolumeCtx = document.getElementById('infraVolumeChart');
+            if (infraVolumeCtx) {
+                chartInstances.infraVolume = new Chart(infraVolumeCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Sala 4', 'Sala 3', 'Sala 5', 'Sala 2', 'Sala 7', 'Sale Minori'],
+                        datasets: [{
+                            data: [105, 84, 75, 67, 60, 64],
+                            backgroundColor: [
+                                '#e74c3c', '#f39c12', '#27ae60', '#3498db', '#9b59b6', '#95a5a6'
+                            ],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1.2,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Volume Interventi - Top 5 Concentrazione',
+                                font: { size: 16, weight: 'bold' }
+                            },
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Ripristina visibilità infraSection
+            infraSection.style.display = originalDisplay;
+            infraSection.style.visibility = '';
+            infraSection.style.position = '';
+            infraSection.style.top = '';
+
+            // ========== SPECIALITÀ CHARTS - FORCE VISIBILITY ==========
+            
+            // Forza visibilità temporanea per rendering chart
+            const specSection = document.getElementById('specialita');
+            const originalDisplaySpec = specSection.style.display;
+            specSection.style.display = 'block';
+            specSection.style.visibility = 'hidden';
+            specSection.style.position = 'absolute';
+            specSection.style.top = '-9999px';
+
+            // Specialità Variabilità Chart
+            const specVariabilitaCtx = document.getElementById('specVariabilitaChart');
+            if (specVariabilitaCtx) {
+                chartInstances.specVariabilita = new Chart(specVariabilitaCtx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'Specialità',
+                            data: [
+                                {x: 156, y: 76, label: 'UROLOGIA'},
+                                {x: 104, y: 41, label: 'ORTOPEDIA'}, 
+                                {x: 83, y: 62, label: 'GINECOLOGIA'},
+                                {x: 73, y: 52, label: 'CHIRURGIA'},
+                                {x: 39, y: 63, label: 'ORL'}
+                            ],
+                            backgroundColor: [
+                                '#e74c3c', '#27ae60', '#e74c3c', '#f39c12', '#e74c3c'
+                            ],
+                            pointRadius: 10,
+                            pointHoverRadius: 14
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1.3,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Variabilità vs Volume - UROLOGIA Worst',
+                                font: { size: 16, weight: 'bold' },
+                                color: '#e74c3c'
+                            },
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const point = context.raw;
+                                        return `${point.label}: ${point.x} interventi, ${point.y}% CV`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Volume Interventi'
+                                },
+                                min: 0,
+                                max: 180
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Variabilità %'
+                                },
+                                min: 0,
+                                max: 80
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Specialità Case Mix Chart
+            const specCaseMixCtx = document.getElementById('specCaseMixChart');
+            if (specCaseMixCtx) {
+                chartInstances.specCaseMix = new Chart(specCaseMixCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['UROLOGIA', 'ORTOPEDIA', 'GINECOLOGIA', 'CHIRURGIA', 'ORL'],
+                        datasets: [
+                            {
+                                label: 'Elezione',
+                                data: [79, 86, 76, 68, 85],
+                                backgroundColor: '#27ae60',
+                                borderRadius: 4,
+                                maxBarThickness: 50
+                            },
+                            {
+                                label: 'Urgenza',
+                                data: [13, 3, 13, 22, 3],
+                                backgroundColor: '#e74c3c',
+                                borderRadius: 4,
+                                maxBarThickness: 50
+                            },
+                            {
+                                label: 'Altri',
+                                data: [8, 11, 11, 10, 12],
+                                backgroundColor: '#f39c12',
+                                borderRadius: 4,
+                                maxBarThickness: 50
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1.5,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Case Mix - CHIRURGIA 22% Urgenze',
+                                font: { size: 16, weight: 'bold' }
+                            },
+                            legend: {
+                                position: 'bottom'
+                            }
+                        },
+                        scales: {
+                            x: {
+                                stacked: true
+                            },
+                            y: {
+                                stacked: true,
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Ripristina visibilità specSection
+            specSection.style.display = originalDisplaySpec;
+            specSection.style.visibility = '';
+            specSection.style.position = '';
+            specSection.style.top = '';
+
+            // ========== OVERVIEW & EXECUTIVE CHARTS ==========
+            
+            // Executive Timeline Chart
+            const execTimelineCtx = document.getElementById('execTimelineChart');
+            if (execTimelineCtx) {
+                chartInstances.execTimeline = new Chart(execTimelineCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: [
+                            'Timing Sistemico',
+                            'Infrastructure Rebalancing', 
+                            'Specialità Consolidamento',
+                            'Turn-over Optimization',
+                            'Standardizzazione Specialità'
+                        ],
+                        datasets: [{
+                            label: 'Settimane',
+                            data: [2, 4, 12, 4, 16],
+                            backgroundColor: [
+                                '#e74c3c', '#f39c12', '#f1c40f', '#3498db', '#9b59b6'
+                            ],
+                            borderRadius: 8,
+                            maxBarThickness: 60
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 2,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Timeline Implementazione (Settimane)',
+                                font: { size: 16, weight: 'bold' }
+                            },
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Settimane'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Overview Specialità Chart
+            const overviewSpecialitaCtx = document.getElementById('overviewSpecialitaChart');
+            if (overviewSpecialitaCtx) {
+                chartInstances.overviewSpecialita = new Chart(overviewSpecialitaCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['UROLOGIA', 'ORTOPEDIA', 'GINECOLOGIA', 'CHIRURGIA G.', 'ORL'],
+                        datasets: [{
+                            data: [156, 104, 83, 73, 39],
+                            backgroundColor: [
+                                '#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe'
+                            ],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1.2,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Distribuzione per Specialità',
+                                font: { size: 16, weight: 'bold' }
+                            },
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Overview Tipo Intervento Chart
+            const overviewTipoCtx = document.getElementById('overviewTipoInterventoChart');
+            if (overviewTipoCtx) {
+                chartInstances.overviewTipo = new Chart(overviewTipoCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Elezione', 'Urgenza', 'Lib. Prof.', 'Urg. Diff.'],
+                        datasets: [{
+                            label: 'N° Interventi',
+                            data: [331, 51, 44, 29],
+                            backgroundColor: [
+                                '#27ae60', '#e74c3c', '#f39c12', '#9b59b6'
+                            ],
+                            borderRadius: 6,
+                            maxBarThickness: 70
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1.5,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Tipologia Interventi',
+                                font: { size: 16, weight: 'bold' }
+                            },
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+        }); // Fine DOMContentLoaded
+    </script>
+</body>
+</html>
