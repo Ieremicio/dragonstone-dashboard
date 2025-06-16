@@ -1586,11 +1586,93 @@
                     </div>
                 </div>
             </div>
-            
+
+            <!-- Timing Heatmap Analysis -->
+            <div class="section">
+                <h2 class="section-title">🔥 Heatmap Timing Critico</h2>
+                
+                <!-- Descrizione e Contesto -->
+                <div style="background: #e8f4fd; padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 5px solid #3498db;">
+                    <h4 style="color: #2c3e50; margin-bottom: 15px;">📋 Descrizione Analisi</h4>
+                    <p style="color: #2c3e50; line-height: 1.6; margin-bottom: 15px;">
+                        <strong>La heatmap mostra la percentuale di primi interventi che iniziano in ritardo rispetto alla programmazione delle 8:00, 
+                        analizzata per giorno della settimana e fascia oraria effettiva di inizio.</strong>
+                    </p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 0.95em;">
+                        <div>
+                            <strong style="color: #e74c3c;">🎯 Metrica:</strong> % Primi interventi in ritardo<br>
+                            <strong style="color: #3498db;">📊 Baseline:</strong> Programmazione ore 8:00<br>
+                            <strong style="color: #f39c12;">📈 Campione:</strong> 146 primi interventi/35 giorni
+                        </div>
+                        <div>
+                            <strong style="color: #9b59b6;">🔍 Focus:</strong> Pattern sistemici di ritardo<br>
+                            <strong style="color: #27ae60;">💡 Obiettivo:</strong> Identificare bottleneck ricorrenti<br>
+                            <strong style="color: #e74c3c;">⚠️ Alert:</strong> Zone rosse = criticità massima
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chart Container con classe specifica -->
+                <div class="heatmap-chart-container" style="
+                    background: #f8f9fa;
+                    border-radius: 10px;
+                    padding: 20px;
+                    height: 600px !important;
+                    width: 100% !important;
+                    max-width: none !important;
+                    position: relative;
+                    margin: 20px 0;
+                ">
+                    <canvas id="timingHeatmapChart"></canvas>
+                </div>
+                
+                <!-- Legenda e Interpretazione -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                    <!-- Legenda Colori -->
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 5px solid #3498db;">
+                        <h4 style="color: #2c3e50; margin-bottom: 15px;">🎨 Legenda Intensità</h4>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 30px; height: 20px; background: #8b0000; border-radius: 3px;"></div>
+                                <span style="font-weight: 600;">95-100%: CRITICO</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 30px; height: 20px; background: #e74c3c; border-radius: 3px;"></div>
+                                <span style="font-weight: 600;">80-94%: Alto</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 30px; height: 20px; background: #f39c12; border-radius: 3px;"></div>
+                                <span style="font-weight: 600;">65-79%: Medio</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 30px; height: 20px; background: #f1c40f; border-radius: 3px;"></div>
+                                <span style="font-weight: 600;">50-64%: Basso</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 30px; height: 20px; background: #27ae60; border-radius: 3px;"></div>
+                                <span style="font-weight: 600;"><50%: Ottimale</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Interpretazione -->
+                    <div style="background: #fff3cd; padding: 20px; border-radius: 10px; border-left: 5px solid #f39c12;">
+                        <h4 style="color: #856404; margin-bottom: 15px;">📊 Pattern Critici Identificati</h4>
+                        <div style="color: #856404; line-height: 1.6;">
+                            <p style="margin-bottom: 10px;"><strong>🔥 EPICENTRO:</strong> Giovedì 10:00-12:00 = 100% ritardi sistematici</p>
+                            <p style="margin-bottom: 10px;"><strong>⚠️ MARTEDÌ:</strong> Giornata più problematica (8:00 e 11:00-12:00)</p>
+                            <p style="margin-bottom: 10px;"><strong>✅ VENERDÌ PM:</strong> Unica fascia "verde" (13:00 = 55%)</p>
+                            <p><strong>🎯 INSIGHT:</strong> Pattern ricorrente 10:00-12:00 = bottleneck sistemico</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Turn-over Analysis -->
             <div class="section">
                 <h2 class="section-title">🔄 Analisi Turn-over tra Interventi</h2>
-                <div class="timing-grid">
+                <div class="tim
+                ing-grid">
                     <div style="display: flex; flex-direction: column; justify-content: center; padding: 40px; text-align: center; background: #f8f9fa; border-radius: 15px;">
                         <div style="font-size: 4em; color: #e74c3c; margin-bottom: 20px;">⏱️</div>
                         <div style="font-size: 2.5em; font-weight: 700; color: #2c3e50; margin-bottom: 10px;">33 minuti</div>
@@ -1806,7 +1888,71 @@
                         <canvas id="infraCapacityChart"></canvas>
                     </div>
                     <div class="chart-container">
-                        <canvas id="infraVolumeChart"></canvas>
+                        <canvas id="infraSankeyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Capacity Bubble Analysis -->
+            <div class="section">
+                <h2 class="section-title">💫 Bubble Analysis - Squilibrio Capacity Critico</h2>
+                
+                <!-- Descrizione Bubble Chart -->
+                <div style="background: #fff8e1; padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 5px solid #f39c12;">
+                    <h4 style="color: #e67e22; margin-bottom: 15px;">⚖️ Squilibrio Infrastructure Sistemico</h4>
+                    <p style="color: #e67e22; line-height: 1.6; margin-bottom: 15px;">
+                        <strong>Il bubble chart rivela squilibri critici nell'allocazione sale: Sala 4 sovraccarica (103% capacity) mentre 
+                        Sale 8-9 quasi inutilizzate (<15%). Dimensione bubble = numero specialità per sala.</strong>
+                    </p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; font-size: 0.95em;">
+                        <div>
+                            <strong style="color: #e74c3c;">🔴 CRITICITÀ:</strong><br>
+                            • Sala 4: 103% utilizzo<br>
+                            • 105 interventi concentrati<br>
+                            • 3 specialità sovrapposte
+                        </div>
+                        <div>
+                            <strong style="color: #95a5a6;">⚪ SPRECO:</strong><br>
+                            • Sale 8-9: <15% utilizzo<br>
+                            • Capacity dormiente<br>
+                            • Investimenti sottoutilizzati
+                        </div>
+                        <div>
+                            <strong style="color: #27ae60;">✅ TARGET:</strong><br>
+                            • Utilizzo 70-80% ottimale<br>
+                            • Load balancing sale<br>
+                            • +40% capacity disponibile
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bubble Chart Container -->
+                <div class="chart-container" style="height: 600px; margin: 20px 0;">
+                    <canvas id="infraBubbleChart"></canvas>
+                </div>
+                
+                <!-- Analisi Actionable -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                    <!-- Quick Wins -->
+                    <div style="background: #e8f5e8; padding: 20px; border-radius: 10px; border-left: 5px solid #27ae60;">
+                        <h4 style="color: #2c3e50; margin-bottom: 15px;">🚀 Quick Wins Identificati</h4>
+                        <div style="color: #2c3e50; line-height: 1.6; font-size: 0.95em;">
+                            <p style="margin-bottom: 10px;"><strong>Redistribuzione immediata:</strong> Sala 4 → Sale 1,8,9</p>
+                            <p style="margin-bottom: 10px;"><strong>Target realistico:</strong> Sala 4 da 103% a 80% utilizzo</p>
+                            <p style="margin-bottom: 10px;"><strong>Activation dormiente:</strong> Sale 8-9 da 1% a 30%</p>
+                            <p><strong>ROI:</strong> +40% capacity senza investimenti hardware</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Strategic Actions -->
+                    <div style="background: #fdf2e9; padding: 20px; border-radius: 10px; border-left: 5px solid #e67e22;">
+                        <h4 style="color: #2c3e50; margin-bottom: 15px;">🎯 Azioni Strategiche</h4>
+                        <div style="color: #2c3e50; line-height: 1.6; font-size: 0.95em;">
+                            <p style="margin-bottom: 10px;"><strong>Mapping completo:</strong> Verificare Sale 8,9,11 "fantasma"</p>
+                            <p style="margin-bottom: 10px;"><strong>Load balancing:</strong> Algorithm allocation dinamico</p>
+                            <p style="margin-bottom: 10px;"><strong>Specialization model:</strong> Sala dedicata vs condivisa</p>
+                            <p><strong>Monitoring:</strong> KPI utilizzo real-time per ottimizzazione</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2145,6 +2291,61 @@
                     </div>
                     <div class="chart-container">
                         <canvas id="specCaseMixChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <!-- Variability Box Plot Analysis -->
+            <div class="section">
+                <h2 class="section-title">📦 Analisi Variabilità - Box Plot Critico</h2>
+                
+                <!-- Descrizione Box Plot -->
+                <div style="background: #fff5f5; padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 5px solid #e74c3c;">
+                    <h4 style="color: #c0392b; margin-bottom: 15px;">⚠️ Alert Variabilità Critica</h4>
+                    <p style="color: #c0392b; line-height: 1.6; margin-bottom: 15px;">
+                        <strong>Il box plot evidenzia la distribuzione dei tempi operatori per specialità, con focus sulla variabilità eccessiva di UROLOGIA (76% CV) 
+                        rispetto al target operativo del 30% CV per programmazione affidabile.</strong>
+                    </p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 0.95em;">
+                        <div>
+                            <strong style="color: #e74c3c;">📊 Metrica:</strong> Distribuzione tempi intervento (min)<br>
+                            <strong style="color: #9b59b6;">🎯 Target CV:</strong> <30% per programmazione affidabile<br>
+                            <strong style="color: #f39c12;">📈 Problema:</strong> UROLOGIA 76% CV = 2.5x oltre limite
+                        </div>
+                        <div>
+                            <strong style="color: #27ae60;">🏆 Best Practice:</strong> ORTOPEDIA 42% CV<br>
+                            <strong style="color: #3498db;">🔍 Outliers:</strong> Interventi anomali da standardizzare<br>
+                            <strong style="color: #2c3e50;">💡 Azione:</strong> Protocolli UROLOGIA prioritari
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Box Plot Chart Container -->
+                <div class="chart-container" style="height: 500px; margin: 20px 0;">
+                    <canvas id="specialitaBoxPlotChart"></canvas>
+                </div>
+                
+                <!-- Interpretazione Risultati -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                    <!-- Analisi Critica -->
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 5px solid #e74c3c;">
+                        <h4 style="color: #2c3e50; margin-bottom: 15px;">🚨 Criticità Identificate</h4>
+                        <div style="color: #2c3e50; line-height: 1.6; font-size: 0.95em;">
+                            <p style="margin-bottom: 10px;"><strong>UROLOGIA:</strong> Range 22-160 min (76% CV) = programmazione impossibile</p>
+                            <p style="margin-bottom: 10px;"><strong>GINECOLOGIA:</strong> 62% CV = seconda più variabile</p>
+                            <p style="margin-bottom: 10px;"><strong>CHIRURGIA:</strong> 52% CV + 6 sale = complessità massima</p>
+                            <p><strong>Impatto:</strong> Sistema scheduling compromesso su 4/5 specialità</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Best Practices -->
+                    <div style="background: #f0f8f0; padding: 20px; border-radius: 10px; border-left: 5px solid #27ae60;">
+                        <h4 style="color: #2c3e50; margin-bottom: 15px;">✅ Modelli Replicabili</h4>
+                        <div style="color: #2c3e50; line-height: 1.6; font-size: 0.95em;">
+                            <p style="margin-bottom: 10px;"><strong>ORTOPEDIA:</strong> 42% CV = migliore controllo variabilità</p>
+                            <p style="margin-bottom: 10px;"><strong>Protocolli standardizzati:</strong> Tempi più prevedibili</p>
+                            <p style="margin-bottom: 10px;"><strong>Target raggiungibile:</strong> Riduzione CV a <40% fattibile</p>
+                            <p><strong>ROI:</strong> Programmazione accurata = +15% efficiency planning</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2903,8 +3104,700 @@
                     }
                 });
             }
+        // MEDIUM PRIORITY 1: Box Plot Variabilità Specialità
+        const specialitaBoxPlotCtx = document.getElementById('specialitaBoxPlotChart');
+            if (specialitaBoxPlotCtx) {
+                // Dati box plot per ogni specialità (quartili, mediana, outliers)
+                const boxPlotData = [
+                    {
+                        name: 'UROLOGIA',
+                        x: 0,
+                        cv: 76,
+                        median: 91,
+                        q1: 60,
+                        q3: 130,
+                        min: 22,
+                        max: 160,
+                        outliers: [15, 180, 195], // outliers estremi
+                        color: '#e74c3c', // rosso per criticità
+                        volume: 156
+                    },
+                    {
+                        name: 'GINECOLOGIA',
+                        x: 1,
+                        cv: 62,
+                        median: 81,
+                        q1: 55,
+                        q3: 110,
+                        min: 30,
+                        max: 140,
+                        outliers: [25, 155],
+                        color: '#f39c12', // arancione
+                        volume: 83
+                    },
+                    {
+                        name: 'ORL',
+                        x: 2,
+                        cv: 62,
+                        median: 82,
+                        q1: 58,
+                        q3: 105,
+                        min: 35,
+                        max: 130,
+                        outliers: [28, 145],
+                        color: '#f1c40f', // giallo
+                        volume: 39
+                    },
+                    {
+                        name: 'CHIRURGIA',
+                        x: 3,
+                        cv: 52,
+                        median: 91,
+                        q1: 65,
+                        q3: 115,
+                        min: 40,
+                        max: 135,
+                        outliers: [30, 150],
+                        color: '#3498db', // blu
+                        volume: 73
+                    },
+                    {
+                        name: 'ORTOPEDIA',
+                        x: 4,
+                        cv: 42,
+                        median: 101,
+                        q1: 78,
+                        q3: 125,
+                        min: 55,
+                        max: 140,
+                        outliers: [45, 155],
+                        color: '#27ae60', // verde per best practice
+                        volume: 104
+                    }
+                ];
 
+                // Prepara datasets per Chart.js
+                const datasets = [];
+
+                // Dataset per le box (Q1-Q3)
+                datasets.push({
+                    label: 'Range Interquartile (Q1-Q3)',
+                    type: 'bar',
+                    data: boxPlotData.map(d => ({
+                        x: d.x,
+                        y: d.q3 - d.q1,
+                        base: d.q1,
+                        specialty: d.name,
+                        cv: d.cv,
+                        median: d.median,
+                        q1: d.q1,
+                        q3: d.q3
+                    })),
+                    backgroundColor: boxPlotData.map(d => d.color + '40'), // semi-trasparente
+                    borderColor: boxPlotData.map(d => d.color),
+                    borderWidth: 2,
+                    maxBarThickness: 60
+                });
+
+                // Dataset per le mediane
+                datasets.push({
+                    label: 'Mediana',
+                    type: 'scatter',
+                    data: boxPlotData.map(d => ({
+                        x: d.x,
+                        y: d.median,
+                        specialty: d.name,
+                        cv: d.cv
+                    })),
+                    backgroundColor: '#2c3e50',
+                    borderColor: '#2c3e50',
+                    borderWidth: 3,
+                    pointRadius: 8,
+                    pointStyle: 'line'
+                });
+
+                // Dataset per whiskers (min-max)
+                const whiskerData = [];
+                boxPlotData.forEach(d => {
+                    // Whisker inferiore
+                    whiskerData.push({x: d.x, y: d.min, type: 'whisker', specialty: d.name});
+                    whiskerData.push({x: d.x, y: d.q1, type: 'whisker', specialty: d.name});
+                    // Whisker superiore  
+                    whiskerData.push({x: d.x, y: d.q3, type: 'whisker', specialty: d.name});
+                    whiskerData.push({x: d.x, y: d.max, type: 'whisker', specialty: d.name});
+                });
+
+                datasets.push({
+                    label: 'Whiskers (Min-Max)',
+                    type: 'line',
+                    data: whiskerData,
+                    backgroundColor: 'transparent',
+                    borderColor: '#34495e',
+                    borderWidth: 2,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#34495e',
+                    showLine: false,
+                    spanGaps: false
+                });
+
+                // Dataset per outliers
+                const outlierData = [];
+                boxPlotData.forEach(d => {
+                    d.outliers.forEach(outlier => {
+                        outlierData.push({
+                            x: d.x,
+                            y: outlier,
+                            specialty: d.name,
+                            cv: d.cv,
+                            outlierValue: outlier
+                        });
+                    });
+                });
+
+                datasets.push({
+                    label: 'Outliers',
+                    type: 'scatter',
+                    data: outlierData,
+                    backgroundColor: '#e74c3c',
+                    borderColor: '#c0392b',
+                    borderWidth: 2,
+                    pointRadius: 6,
+                    pointStyle: 'circle'
+                });
+
+                chartInstances.specialitaBoxPlot = new Chart(specialitaBoxPlotCtx, {
+                    type: 'bar',
+                    data: {
+                        datasets: datasets
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Distribuzione Tempi Operatori - UROLOGIA Critica (76% CV)',
+                                font: { size: 18, weight: 'bold' },
+                                color: '#e74c3c',
+                                padding: { bottom: 30 }
+                            },
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    filter: function(item) {
+                                        return item.text !== 'Whiskers (Min-Max)'; // nasconde whiskers dalla legenda
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0,0,0,0.9)',
+                                titleColor: 'white',
+                                bodyColor: 'white',
+                                borderColor: '#3498db',
+                                borderWidth: 2,
+                                cornerRadius: 8,
+                                callbacks: {
+                                    title: function(context) {
+                                        const point = context[0];
+                                        return point.raw.specialty || boxPlotData[point.parsed.x].name;
+                                    },
+                                    label: function(context) {
+                                        const point = context.raw;
+                                        const specialty = boxPlotData[context.parsed.x];
+                                        
+                                        if (context.datasetIndex === 0) { // Box
+                                            return [
+                                                `Variabilità: ${specialty.cv}% CV`,
+                                                `Q3 (75%): ${specialty.q3} min`,
+                                                `Mediana: ${specialty.median} min`, 
+                                                `Q1 (25%): ${specialty.q1} min`,
+                                                `Range: ${specialty.max - specialty.min} min`
+                                            ];
+                                        } else if (context.datasetIndex === 1) { // Mediana
+                                            return `Mediana: ${point.y} min (CV: ${point.cv}%)`;
+                                        } else if (context.datasetIndex === 3) { // Outliers
+                                            return `Outlier: ${point.outlierValue} min - Caso anomalo`;
+                                        }
+                                        return `Valore: ${point.y} min`;
+                                    },
+                                    afterLabel: function(context) {
+                                        if (context.datasetIndex === 0) {
+                                            const cv = boxPlotData[context.parsed.x].cv;
+                                            if (cv >= 70) return '🔥 CRITICO: CV > 70%';
+                                            if (cv >= 50) return '⚠️ ALTO: CV > 50%';
+                                            if (cv >= 40) return '🟡 MEDIO: CV > 40%';
+                                            return '✅ ACCETTABILE: CV < 40%';
+                                        }
+                                        return '';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                min: -0.5,
+                                max: 4.5,
+                                ticks: {
+                                    stepSize: 1,
+                                    callback: function(value) {
+                                        return boxPlotData[value]?.name || '';
+                                    },
+                                    font: {
+                                        size: 14,
+                                        weight: 'bold'
+                                    },
+                                    color: '#2c3e50'
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'SPECIALITÀ',
+                                    font: {
+                                        size: 16,
+                                        weight: 'bold'
+                                    },
+                                    color: '#2c3e50'
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                max: 200,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + ' min';
+                                    },
+                                    font: {
+                                        size: 12
+                                    }
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'TEMPO OPERATORIO (minuti)',
+                                    font: {
+                                        size: 16,
+                                        weight: 'bold'
+                                    },
+                                    color: '#2c3e50'
+                                },
+                                grid: {
+                                    color: '#ecf0f1'
+                                }
+                            }
+                        },
+                        interaction: {
+                            intersect: false,
+                            mode: 'index'
+                        }
+                    }
+                });
+            }
+            // TODO: Mancano i label per ogni colonna...
         }); // Fine DOMContentLoaded
+
+        // ========== HIGH PRIORITY CHARTS - MODULAR ADDITIONS ==========
+            
+            // 1. EXECUTIVE: ROI Waterfall Chart
+            const execWaterfallCtx = document.getElementById('execWaterfallChart');
+            if (execWaterfallCtx) {
+                chartInstances.execWaterfall = new Chart(execWaterfallCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: [
+                            'Situazione Attuale',
+                            'Timing Fix', 
+                            'Infrastructure',
+                            'Specialità',
+                            'Turn-over',
+                            'ROI Totale'
+                        ],
+                        datasets: [{
+                            label: 'ROI Impact (%)',
+                            data: [44, 15, 10, 8, 7, 84], // 44% base + incrementi = 84% finale
+                            backgroundColor: [
+                                '#e74c3c', // situazione attuale (negativo)
+                                '#27ae60', // timing fix (positivo)
+                                '#f39c12', // infrastructure 
+                                '#9b59b6', // specialità
+                                '#3498db', // turn-over
+                                '#2ecc71'  // totale finale
+                            ],
+                            borderRadius: 6,
+                            maxBarThickness: 60
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1.5,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'ROI Waterfall - Capacity Boost Progressivo',
+                                font: { size: 16, weight: 'bold' },
+                                color: '#27ae60'
+                            },
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const value = context.parsed.y;
+                                        if (context.dataIndex === 0) {
+                                            return `Utilizzo attuale: ${value}%`;
+                                        } else if (context.dataIndex === 5) {
+                                            return `Utilizzo target: ${value}%`;
+                                        } else {
+                                            return `Boost: +${value}%`;
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 90,
+                                title: {
+                                    display: true,
+                                    text: 'Capacity Utilization %'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+// 2. TIMING: Heatmap Chart.js - FIXED VERSION
+const timingHeatmapCtx = document.getElementById('timingHeatmapChart');
+            if (timingHeatmapCtx) {
+                // Dati heatmap dinamici - facilmente modificabili
+                const heatmapData = [
+                    // Lunedì
+                    {day: 0, hour: 0, intensity: 85, dayName: 'LUN', hourName: '8:00'},
+                    {day: 0, hour: 1, intensity: 70, dayName: 'LUN', hourName: '9:00'},
+                    {day: 0, hour: 2, intensity: 90, dayName: 'LUN', hourName: '10:00'},
+                    {day: 0, hour: 3, intensity: 95, dayName: 'LUN', hourName: '11:00'},
+                    {day: 0, hour: 4, intensity: 80, dayName: 'LUN', hourName: '12:00'},
+                    {day: 0, hour: 5, intensity: 60, dayName: 'LUN', hourName: '13:00'},
+                    
+                    // Martedì
+                    {day: 1, hour: 0, intensity: 100, dayName: 'MAR', hourName: '8:00'},
+                    {day: 1, hour: 1, intensity: 85, dayName: 'MAR', hourName: '9:00'},
+                    {day: 1, hour: 2, intensity: 95, dayName: 'MAR', hourName: '10:00'},
+                    {day: 1, hour: 3, intensity: 100, dayName: 'MAR', hourName: '11:00'},
+                    {day: 1, hour: 4, intensity: 90, dayName: 'MAR', hourName: '12:00'},
+                    {day: 1, hour: 5, intensity: 75, dayName: 'MAR', hourName: '13:00'},
+                    
+                    // Mercoledì
+                    {day: 2, hour: 0, intensity: 90, dayName: 'MER', hourName: '8:00'},
+                    {day: 2, hour: 1, intensity: 75, dayName: 'MER', hourName: '9:00'},
+                    {day: 2, hour: 2, intensity: 85, dayName: 'MER', hourName: '10:00'},
+                    {day: 2, hour: 3, intensity: 95, dayName: 'MER', hourName: '11:00'},
+                    {day: 2, hour: 4, intensity: 85, dayName: 'MER', hourName: '12:00'},
+                    {day: 2, hour: 5, intensity: 70, dayName: 'MER', hourName: '13:00'},
+                    
+                    // Giovedì (PICCO CRITICO)
+                    {day: 3, hour: 0, intensity: 95, dayName: 'GIO', hourName: '8:00'},
+                    {day: 3, hour: 1, intensity: 90, dayName: 'GIO', hourName: '9:00'},
+                    {day: 3, hour: 2, intensity: 100, dayName: 'GIO', hourName: '10:00'},
+                    {day: 3, hour: 3, intensity: 100, dayName: 'GIO', hourName: '11:00'},
+                    {day: 3, hour: 4, intensity: 100, dayName: 'GIO', hourName: '12:00'},
+                    {day: 3, hour: 5, intensity: 85, dayName: 'GIO', hourName: '13:00'},
+                    
+                    // Venerdì
+                    {day: 4, hour: 0, intensity: 80, dayName: 'VEN', hourName: '8:00'},
+                    {day: 4, hour: 1, intensity: 65, dayName: 'VEN', hourName: '9:00'},
+                    {day: 4, hour: 2, intensity: 85, dayName: 'VEN', hourName: '10:00'},
+                    {day: 4, hour: 3, intensity: 90, dayName: 'VEN', hourName: '11:00'},
+                    {day: 4, hour: 4, intensity: 75, dayName: 'VEN', hourName: '12:00'},
+                    {day: 4, hour: 5, intensity: 55, dayName: 'VEN', hourName: '13:00'}
+                ];
+
+                // Funzione per determinare il colore in base all'intensità
+                function getHeatmapColor(intensity) {
+                    if (intensity >= 95) return '#8b0000'; // rosso scuro critico
+                    if (intensity >= 85) return '#e74c3c'; // rosso alto
+                    if (intensity >= 75) return '#f39c12'; // arancione medio
+                    if (intensity >= 65) return '#f1c40f'; // giallo basso
+                    return '#27ae60'; // verde ottimale
+                }
+
+                chartInstances.timingHeatmap = new Chart(timingHeatmapCtx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'Intensità Ritardi (%)',
+                            data: heatmapData.map(point => ({
+                                x: point.day,
+                                y: point.hour,
+                                intensity: point.intensity,
+                                dayName: point.dayName,
+                                hourName: point.hourName
+                            })),
+                            backgroundColor: heatmapData.map(point => getHeatmapColor(point.intensity)),
+                            borderColor: heatmapData.map(point => point.intensity >= 95 ? '#2c3e50' : '#ffffff'),
+                            borderWidth: heatmapData.map(point => point.intensity >= 95 ? 4 : 2),
+                            pointRadius: 20, // RIDOTTO: era 45, ora 30 per evitare sovrapposizioni
+                            pointHoverRadius: 35
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false, // CAMBIATO: ora usa tutto lo spazio del container
+                        layout: {
+                            padding: {
+                                top: 30,
+                                bottom: 30,
+                                left: 30,
+                                right: 30
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Intensità Ritardi per Giorno e Fascia Oraria',
+                                font: { size: 18, weight: 'bold' },
+                                color: '#2c3e50',
+                                padding: { bottom: 30 }
+                            },
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0,0,0,0.9)',
+                                titleColor: 'white',
+                                bodyColor: 'white',
+                                borderColor: '#3498db',
+                                borderWidth: 2,
+                                cornerRadius: 8,
+                                titleFont: { size: 14, weight: 'bold' },
+                                bodyFont: { size: 13 },
+                                padding: 12,
+                                callbacks: {
+                                    title: function(context) {
+                                        const point = context[0].raw;
+                                        return `${point.dayName} - ${point.hourName}`;
+                                    },
+                                    label: function(context) {
+                                        const point = context.raw;
+                                        return `Ritardi: ${point.intensity}%`;
+                                    },
+                                    afterLabel: function(context) {
+                                        const point = context.raw;
+                                        if (point.intensity >= 95) {
+                                            return '🔥 LIVELLO CRITICO';
+                                        } else if (point.intensity >= 85) {
+                                            return '🔴 Livello Alto';
+                                        } else if (point.intensity >= 75) {
+                                            return '🟠 Livello Medio';
+                                        } else if (point.intensity >= 65) {
+                                            return '🟡 Livello Basso';
+                                        } else {
+                                            return '🟢 Livello Ottimale';
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                position: 'bottom',
+                                min: -0.5,
+                                max: 4.5,
+                                grid: {
+                                    display: true,
+                                    color: '#bdc3c7',
+                                    lineWidth: 2
+                                },
+                                ticks: {
+                                    stepSize: 1,
+                                    callback: function(value) {
+                                        const giorni = ['LUN', 'MAR', 'MER', 'GIO', 'VEN'];
+                                        return giorni[value] || '';
+                                    },
+                                    font: {
+                                        size: 16,
+                                        weight: 'bold'
+                                    },
+                                    color: '#2c3e50',
+                                    padding: 10
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'GIORNO DELLA SETTIMANA',
+                                    font: {
+                                        size: 16,
+                                        weight: 'bold'
+                                    },
+                                    color: '#2c3e50',
+                                    padding: { top: 15 }
+                                }
+                            },
+                            y: {
+                                type: 'linear',
+                                min: -0.5,
+                                max: 5.5,
+                                grid: {
+                                    display: true,
+                                    color: '#bdc3c7',
+                                    lineWidth: 2
+                                },
+                                ticks: {
+                                    stepSize: 1,
+                                    callback: function(value) {
+                                        const ore = ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00'];
+                                        return ore[value] || '';
+                                    },
+                                    font: {
+                                        size: 16,
+                                        weight: 'bold'
+                                    },
+                                    color: '#2c3e50',
+                                    padding: 10
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'FASCIA ORARIA',
+                                    font: {
+                                        size: 16,
+                                        weight: 'bold'
+                                    },
+                                    color: '#2c3e50',
+                                    padding: { bottom: 15 }
+                                }
+                            }
+                        },
+                        interaction: {
+                            intersect: false
+                        },
+                        elements: {
+                            point: {
+                                hoverBorderWidth: 4
+                            }
+                        }
+                    },
+                    plugins: [{
+                        id: 'heatmapLabels',
+                        afterDatasetsDraw: function(chart) {
+                            const ctx = chart.ctx;
+                            const dataset = chart.data.datasets[0];
+                            const meta = chart.getDatasetMeta(0);
+                            
+                            ctx.save();
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+                            ctx.font = 'bold 12px Arial';
+                            
+                            meta.data.forEach((point, index) => {
+                                const dataPoint = dataset.data[index];
+                                const intensity = dataPoint.intensity;
+                                
+                                // Colore del testo in base all'intensità
+                                if (intensity >= 85) {
+                                    ctx.fillStyle = 'white'; // Testo bianco su sfondo scuro
+                                } else {
+                                    ctx.fillStyle = '#2c3e50'; // Testo scuro su sfondo chiaro
+                                }
+                                
+                                // Disegna il valore percentuale
+                                ctx.fillText(intensity + '%', point.x, point.y);
+                            });
+                            
+                            ctx.restore();
+                        }
+                    }]
+                });
+            }
+            // TODO: NON CI SONO I LABEL PER RIGA E GIORNO
+            // TODO: PERCHÈ RIGHE VANNO DALLE 13 ALLE 8???
+
+            // 3. INFRASTRUCTURE: Sankey-style Flow Chart (simulato con stacked bar)
+            const infraSankeyCtx = document.getElementById('infraSankeyChart');
+            if (infraSankeyCtx) {
+                chartInstances.infraSankey = new Chart(infraSankeyCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['UROLOGIA', 'ORTOPEDIA', 'GINECOLOGIA', 'CHIRURGIA', 'ORL'],
+                        datasets: [
+                            {
+                                label: 'Sala Principale',
+                                data: [67, 72, 72, 51, 100], // % concentrazione sala principale
+                                backgroundColor: '#2ecc71',
+                                borderRadius: 4,
+                                maxBarThickness: 60
+                            },
+                            {
+                                label: 'Sale Secondarie', 
+                                data: [33, 28, 28, 49, 0], // % distribuzione altre sale
+                                backgroundColor: '#f39c12',
+                                borderRadius: 4,
+                                maxBarThickness: 60
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1.5,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Flussi Specialità-Sale - Frammentazione Critica',
+                                font: { size: 16, weight: 'bold' },
+                                color: '#e74c3c'
+                            },
+                            legend: {
+                                position: 'bottom'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    afterLabel: function(context) {
+                                        const specialita = context.label;
+                                        const saleMap = {
+                                            'UROLOGIA': '4 sale utilizzate',
+                                            'ORTOPEDIA': '5 sale utilizzate', 
+                                            'GINECOLOGIA': '3 sale utilizzate',
+                                            'CHIRURGIA': '6 sale utilizzate - MAX FRAMMENTAZIONE',
+                                            'ORL': '1 sala dedicata - MODELLO OTTIMALE'
+                                        };
+                                        return saleMap[specialita] || '';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                stacked: true,
+                                title: {
+                                    display: true,
+                                    text: 'Specialità'
+                                }
+                            },
+                            y: {
+                                stacked: true,
+                                beginAtZero: true,
+                                max: 100,
+                                title: {
+                                    display: true,
+                                    text: 'Concentrazione %'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
     </script>
 </body>
 </html>
