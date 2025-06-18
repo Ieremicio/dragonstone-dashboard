@@ -311,6 +311,21 @@
             border-color: var(--primary);
         }
         
+        .operational-button {
+        padding: 1.2rem;
+        border-radius: var(--border-radius);
+        background: var(--light);
+        cursor: pointer;
+        transition: var(--transition);
+        border: 1px solid #e0e6ed;
+    }
+
+    .operational-button:hover, .operational-button.active {
+        background: var(--primary);
+        color: var(--white);
+        border-color: var(--primary);
+    }
+
         .specialty-name {
             font-weight: 600;
             margin-bottom: 5px;
@@ -712,7 +727,6 @@
         }
     </style>
 </head>
-
 <body>
     <!-- Header -->
     <div class="header">
@@ -913,6 +927,27 @@
                 </div>
             </div>
             
+            <!-- Charts Grid -->
+            <div class="chart-grid">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Carico Settimanale per Specialità</h3>
+                    </div>
+                    <div class="chart-box">
+                        <canvas id="heatmapCaricoSettimanaleSpecialitaChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Utilizzo Sale per Specialità</h3>
+                    </div>
+                    <div class="chart-box">
+                        <canvas id="heatmapUtilizzoSaleSpecialitaChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
             <!-- Pattern Critici -->
             <div class="patterns-section">
                 <h3 class="patterns-title">Pattern Critici per Specialità</h3>
@@ -949,26 +984,6 @@
                 </div>
             </div>
             
-            <!-- Charts Grid -->
-            <div class="chart-grid">
-                <div class="chart-container">
-                    <div class="chart-header">
-                        <h3 class="chart-title">Carico Settimanale per Specialità</h3>
-                    </div>
-                    <div class="chart-box">
-                        <canvas id="heatmapCaricoSettimanaleSpecialitaChart"></canvas>
-                    </div>
-                </div>
-                
-                <div class="chart-container">
-                    <div class="chart-header">
-                        <h3 class="chart-title">Utilizzo Sale per Specialità</h3>
-                    </div>
-                    <div class="chart-box">
-                        <canvas id="heatmapUtilizzoSaleSpecialitaChart"></canvas>
-                    </div>
-                </div>
-            </div>
         </section>
         
         <!-- Sezione Analisi per Specialità -->
@@ -1041,332 +1056,34 @@
                 </div>
             </div>
             
-            <!-- Turnover Time -->
-            <div class="heatmap-section">
-                <h3 class="section-title">
-                    <i class="fas fa-exchange-alt"></i>
-                    Turnover Time - Sale Operatorie
-                </h3>
-                <p><strong>Tempo tra interventi consecutivi (outliers >120 min esclusi)</strong></p>
-                
-                <div class="stat-grid">
-                    <div class="stat-card">
-                        <div class="stat-value">216</div>
-                        <div class="stat-label">Turnover analizzati</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">23.1</div>
-                        <div class="stat-label">Media (minuti)</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">20.0</div>
-                        <div class="stat-label">Mediana (minuti)</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">5</div>
-                        <div class="stat-label">Outliers esclusi</div>
-                    </div>
-                </div>
-                
-                <div class="chart-grid">
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h3 class="chart-title">Distribuzione per Fasce di Tempo</h3>
+            <div class="main-container">
+                <div class="sidebar">
+                    <h2>Aree di Analisi</h2>
+                    <div class="specialty-buttons">
+                        <div class="operational-button active" data-operational="turnover">
+                            <div class="specialty-name">Turnover Time</div>
+                            <div class="specialty-stats">Tempo tra interventi consecutivi<br>216 turnover analizzati</div>
                         </div>
-                        <div class="chart-box">
-                            <canvas id="turnoverDistribuzioneFasceChart"></canvas>
+                        <div class="operational-button" data-operational="timing">
+                            <div class="specialty-name">Timing Primi Interventi</div>
+                            <div class="specialty-stats">Analisi ritardi programmazione<br>101 primi interventi</div>
                         </div>
-                    </div>
-                    
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h3 class="chart-title">Turnover Medio per Sala Operatoria</h3>
+                        <div class="operational-button" data-operational="tempi">
+                            <div class="specialty-name">Tempi Operatori</div>
+                            <div class="specialty-stats">Analisi durata interventi<br>Variabilità per tipologia</div>
                         </div>
-                        <div class="chart-box">
-                            <canvas id="turnoverMedioSaleOperatorieChart"></canvas>
+                        <div class="operational-button" data-operational="utilizzo">
+                            <div class="specialty-name">Utilizzo Sale</div>
+                            <div class="specialty-stats">Efficienza occupazione<br>378 interventi filtrati</div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="chart-grid">
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h3 class="chart-title">Numero Turnover per Sala</h3>
-                        </div>
-                        <div class="chart-box">
-                            <canvas id="turnoverNumeroPerSalaChart"></canvas>
-                        </div>
-                    </div>
-                    
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h3 class="chart-title">Distribuzione Generale dei Tempi</h3>
-                        </div>
-                        <div class="chart-box">
-                            <canvas id="turnoverIstogrammaDistribuzioneChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Analisi Ritardi -->
-            <div class="heatmap-section">
-                <h3 class="section-title">
-                    <i class="fas fa-clock"></i>
-                    Analisi Timing Primi Interventi
-                </h3>
-                <p><strong>101 primi interventi | Range 8:00-10:59 | Sale 2,3,4,5,6,7 </strong></p>
-                
-                <div class="stat-grid">
-                    <div class="stat-card">
-                        <div class="stat-value">101</div>
-                        <div class="stat-label">Primi interventi</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">8:35</div>
-                        <div class="stat-label">Orario medio</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">+35 min</div>
-                        <div class="stat-label">Ritardo medio</div>
-                    </div>
-                </div>
-                
-                <div class="chart-grid">
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h3 class="chart-title">Distribuzione Orari</h3>
-                        </div>
-                        <div class="chart-box">
-                            <canvas id="timingDistribuzioneOrariChart"></canvas>
-                        </div>
-                    </div>
-                    
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h3 class="chart-title">Distribuzione Dettagliata Fascia 8:00-10:59</h3>
-                        </div>
-                        <div class="chart-box">
-                            <canvas id="timingDettaglioFasciaMattutinaChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="chart-container">
-                    <div class="chart-header">
-                        <h3 class="chart-title">Ritardi dalla Programmazione 8:00</h3>
-                    </div>
-                    <div class="chart-box">
-                        <canvas id="timingRitardiProgrammazioneChart"></canvas>
-                    </div>
-                </div>
-                
-                <div class="outliers">
-                    <h3>Outliers Rimossi (7 casi)</h3>
-                    <div class="outlier-item">
-                        <strong>1 Anticipo:</strong> 7:00 Sala 3 UROLOGIA (Libera Professione) → Turno pre-8:00
-                    </div>
-                    <div class="outlier-item">
-                        <strong>6 Pomeridiani (≥12:00):</strong>
-                        <ul>
-                            <li>4 casi Sala 5 ORTOPEDIA → Realmente unici interventi giornata (sedute pomeridiane programmate)</li>
-                            <li>2 casi Sale 2-3 UROLOGIA → Errore classificazione (altri interventi nella giornata)</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Analisi Tempi Operatori -->
-            <div class="heatmap-section">
-                <h3 class="section-title">
-                    <i class="fas fa-user-md"></i>
-                    Analisi Tempi Operatori
-                </h3>
-                <p><strong>Vista Operativa: Minuti Effettivi vs Range di Variabilità</strong></p>
-                
-                <div class="stat-grid">
-                    <div class="stat-card">
-                        <div class="stat-value">91</div>
-                        <div class="stat-label">Minuti Medi<br>Totali</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">55</div>
-                        <div class="stat-label">Minuti Medi<br>Chirurgici</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">36</div>
-                        <div class="stat-label">Minuti Medi<br>Preparazione</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">60%</div>
-                        <div class="stat-label">Ratio Medio<br>Chirurgico</div>
-                    </div>
-                </div>
-                
-                <div class="chart-grid">
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h3 class="chart-title">Tempi Medi: Totale vs Chirurgico</h3>
-                        </div>
-                        <div class="chart-box">
-                            <canvas id="tempiOperatoriMediTotaleChirurgicoChart"></canvas>
-                        </div>
-                    </div>
-                    
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h3 class="chart-title">Range Temporali (Min-Max)</h3>
-                        </div>
-                        <div class="chart-box">
-                            <canvas id="tempiOperatoriRangeMinMaxChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="grid-2">
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h3 class="chart-title">Composizione Tempo (Preparazione vs Chirurgia)</h3>
-                        </div>
-                        <div class="chart-box">
-                            <canvas id="tempiOperatoriComposizioneChart"></canvas>
-                        </div>
-                    </div>
-                    
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h3 class="chart-title">Breakdown Temporale per Intervento</h3>
-                        </div>
-                        <div class="chart-box">
-                            <canvas id="tempiOperatoriBreakdownChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="findings">
-                    <h3>Interventi per Durata e Variabilità</h3>
-                    
-                    <div class="intervento-detail alta-variabilita">
-                        <strong>PROSTATECTOMIA TRANSURETRALE</strong> (UROLOGIA n=19)<br>
-                        Totale: 99±39min (45-225min) | Chirurgico: 62±38min | Range: 180min<br>
-                        <em>ALTA VARIABILITÀ: Stesso intervento può durare 45min o 4 ore</em>
-                    </div>
-                    
-                    <div class="intervento-detail alta-variabilita">
-                        <strong>RESEZIONE VESCICA</strong> (UROLOGIA n=19)<br>
-                        Totale: 65±30min (22-115min) | Chirurgico: 31±19min | Range: 93min<br>
-                        <em>ALTA VARIABILITÀ: Da 22min a quasi 2 ore per stesso tipo</em>
-                    </div>
-                    
-                    <div class="intervento-detail alta-variabilita">
-                        <strong>COLECISTECTOMIA LAPAROSCOPICA</strong> (CHIRURGIA n=14)<br>
-                        Totale: 107±41min (65-240min) | Chirurgico: 64±26min | Range: 175min<br>
-                        <em>ALTA VARIABILITÀ: Può durare 1 ora o 4 ore</em>
-                    </div>
-                    
-                    <div class="intervento-detail media-variabilita">
-                        <strong>URETEROSCOPIA</strong> (UROLOGIA n=15)<br>
-                        Totale: 100±27min (50-140min) | Chirurgico: 63±29min | Range: 90min<br>
-                        <em>MEDIA VARIABILITÀ: Range contenuto in 1.5 ore</em>
-                    </div>
-                    
-                    <div class="intervento-detail bassa-variabilita">
-                        <strong>SOSTITUZIONE ANCA</strong> (ORTOPEDIA n=11)<br>
-                        Totale: 140±20min (100-180min) | Chirurgico: 86±11min | Range: 80min<br>
-                        <em>BASSA VARIABILITÀ: Range prevedibile 1h20min-3h</em>
-                    </div>
-                    
-                    <div class="intervento-detail bassa-variabilita">
-                        <strong>TAGLIO CESAREO</strong> (GINECOLOGIA n=17)<br>
-                        Totale: 71±12min (55-95min) | Chirurgico: 41±7min | Range: 40min<br>
-                        <em>BASSA VARIABILITÀ: Tempi molto stabili 55-95min</em>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Analisi Utilizzo Sale -->
-            <div class="heatmap-section">
-                <h3 class="section-title">
-                    <i class="fas fa-door-open"></i>
-                    Analisi Utilizzo Sale
-                </h3>
-                <p><strong>Dataset filtrato: 378 interventi | Sale 2,3,4,5,6,7 | No Weekend | No Urgenze >14:30</strong></p>
-                
-                <div class="stat-grid">
-                    <div class="stat-card">
-                        <div class="stat-value">78.1%</div>
-                        <div class="stat-label">Utilizzo Medio</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">16.1%</div>
-                        <div class="stat-label">Tasso Urgenze</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">5 su 6</div>
-                        <div class="stat-label">Sale Range Ottimale</div>
-                    </div>
-                </div>
-                
-                <div class="chart-grid">
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h3 class="chart-title">Confronto utilizzo sala operatoria</h3>
-                        </div>
-                        <div class="chart-box">
-                            <canvas id="utilizzoSaleConfrontoChart"></canvas>
-                        </div>
-                    </div>
-                    
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h3 class="chart-title">Utilizzo Sale (dataset filtrato)</h3>
-                        </div>
-                        <div class="chart-box">
-                            <canvas id="utilizzoSaleFiltroChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="chart-grid">
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h3 class="chart-title">Tipo di intervento</h3>
-                        </div>
-                        <div class="chart-box">
-                            <canvas id="utilizzoSaleTipoInterventoChart"></canvas>
-                        </div>
-                    </div>
-                    
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h3 class="chart-title">Urgenze Residue per Sala</h3>
-                        </div>
-                        <div class="chart-box">
-                            <canvas id="utilizzoSaleUrgenzeResidueChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="comparison">
-                    <h3>Confronto con/senza urgenze</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <div>
-                            <h4>PRIMA (con urgenze >14:30)</h4>
-                            <ul>
-                                <li>403 interventi</li>
-                                <li>Utilizzo medio: <strong>81.1%</strong></li>
-                                <li>Sale sovraccariche: <strong>2</strong> (Sala 4: 100.7%)</li>
-                                <li>Tasso urgenze: <strong>21.3%</strong></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4>DOPO (dataset filtrato)</h4>
-                            <ul>
-                                <li>378 interventi (-25)</li>
-                                <li>Utilizzo medio: <strong>78.1%</strong> (-3.0pp)</li>
-                                <li>Sale sovraccariche: <strong>0</strong> ✓</li>
-                                <li>Tasso urgenze: <strong>16.1%</strong> (-5.2pp)</li>
-                            </ul>
+
+                <div class="content-area">
+                    <div class="dashboard-content" id="operationalDashboardContent">
+                        <div class="empty-state">
+                            <h3>Seleziona un'area di analisi</h3>
+                            <p>Utilizza la sidebar per esplorare le diverse metriche operative del blocco operatorio</p>
                         </div>
                     </div>
                 </div>
@@ -2368,6 +2085,956 @@
         }
         
         // ============================
+// Gestione sezione operativa
+// ============================
+
+function selezionaOperational(operationalName) {
+    // Aggiorna bottoni attivi
+    document.querySelectorAll('.operational-button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector(`[data-operational="${operationalName}"]`).classList.add('active');
+
+    switch(operationalName) {
+        case 'turnover':
+            creaOperationalTurnoverContent();
+            break;
+        case 'timing':
+            creaOperationalTimingContent();
+            break;
+        case 'tempi':
+            creaOperationalTempiContent();
+            break;
+        case 'utilizzo':
+            creaOperationalUtilizzoContent();
+            break;
+        default:
+            break;
+    }
+}
+
+function creaOperationalTurnoverContent() {
+    const content = `
+        <div class="selected-specialty-header">
+            <div class="selected-specialty-title">
+                <i class="fas fa-exchange-alt"></i>
+                Turnover Time - Sale Operatorie
+            </div>
+            <p><strong>Tempo tra interventi consecutivi (outliers >120 min esclusi)</strong></p>
+        </div>
+        
+        <div class="stat-grid">
+            <div class="stat-card">
+                <div class="stat-value">216</div>
+                <div class="stat-label">Turnover analizzati</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">23.1</div>
+                <div class="stat-label">Media (minuti)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">20.0</div>
+                <div class="stat-label">Mediana (minuti)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">5</div>
+                <div class="stat-label">Outliers esclusi</div>
+            </div>
+        </div>
+        
+        <div class="chart-grid">
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Distribuzione per Fasce di Tempo</h3>
+                </div>
+                <div class="chart-box">
+                    <canvas id="opTurnoverDistribuzioneFasceChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Turnover Medio per Sala Operatoria</h3>
+                </div>
+                <div class="chart-box">
+                    <canvas id="opTurnoverMedioSaleChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chart-grid">
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Numero Turnover per Sala</h3>
+                </div>
+                <div class="chart-box">
+                    <canvas id="opTurnoverNumeroSalaChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Distribuzione Generale dei Tempi</h3>
+                </div>
+                <div class="chart-box">
+                    <canvas id="opTurnoverIstogrammaChart"></canvas>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const dashboardContent = document.getElementById('operationalDashboardContent');
+    dashboardContent.innerHTML = content;
+
+    const canvasIds = [
+        'opTurnoverDistribuzioneFasceChart',
+        'opTurnoverMedioSaleChart',
+        'opTurnoverNumeroSalaChart',
+        'opTurnoverIstogrammaChart'
+    ];
+    
+    canvasIds.forEach(id => distruggiGrafico(id));
+
+    requestAnimationFrame(() => {
+        creaOpTurnoverDistribuzioneFasce();
+        creaOpTurnoverMedioSale();
+        creaOpTurnoverNumeroSala();
+        creaOpTurnoverIstogramma();
+    });
+}
+
+function creaOperationalTimingContent() {
+    const content = `
+        <div class="selected-specialty-header">
+            <div class="selected-specialty-title">
+                <i class="fas fa-clock"></i>
+                Analisi Timing Primi Interventi
+            </div>
+            <p><strong>101 primi interventi | Range 8:00-10:59 | Sale 2,3,4,5,6,7</strong></p>
+        </div>
+        
+        <div class="stat-grid">
+            <div class="stat-card">
+                <div class="stat-value">101</div>
+                <div class="stat-label">Primi interventi</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">8:35</div>
+                <div class="stat-label">Orario medio</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">+35 min</div>
+                <div class="stat-label">Ritardo medio</div>
+            </div>
+        </div>
+        
+        <div class="chart-grid">
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Distribuzione Orari</h3>
+                </div>
+                <div class="chart-box">
+                    <canvas id="opTimingDistribuzioneOrariChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Distribuzione Dettagliata Fascia 8:00-10:59</h3>
+                </div>
+                <div class="chart-box">
+                    <canvas id="opTimingDettaglioFasciaChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3 class="chart-title">Ritardi dalla Programmazione 8:00</h3>
+            </div>
+            <div class="chart-box">
+                <canvas id="opTimingRitardiChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="outliers">
+            <h3>Outliers Rimossi (7 casi)</h3>
+            <div class="outlier-item">
+                <strong>1 Anticipo:</strong> 7:00 Sala 3 UROLOGIA (Libera Professione) → Turno pre-8:00
+            </div>
+            <div class="outlier-item">
+                <strong>6 Pomeridiani (≥12:00):</strong>
+                <ul>
+                    <li>4 casi Sala 5 ORTOPEDIA → Realmente unici interventi giornata (sedute pomeridiane programmate)</li>
+                    <li>2 casi Sale 2-3 UROLOGIA → Errore classificazione (altri interventi nella giornata)</li>
+                </ul>
+            </div>
+        </div>
+    `;
+
+    const dashboardContent = document.getElementById('operationalDashboardContent');
+    dashboardContent.innerHTML = content;
+
+    const canvasIds = [
+        'opTimingDistribuzioneOrariChart',
+        'opTimingDettaglioFasciaChart',
+        'opTimingRitardiChart'
+    ];
+    
+    canvasIds.forEach(id => distruggiGrafico(id));
+
+    requestAnimationFrame(() => {
+        creaOpTimingDistribuzioneOrari();
+        creaOpTimingDettaglioFascia();
+        creaOpTimingRitardi();
+    });
+}
+
+function creaOperationalTempiContent() {
+    const content = `
+        <div class="selected-specialty-header">
+            <div class="selected-specialty-title">
+                <i class="fas fa-user-md"></i>
+                Analisi Tempi Operatori
+            </div>
+            <p><strong>Vista Operativa: Minuti Effettivi vs Range di Variabilità</strong></p>
+        </div>
+        
+        <div class="stat-grid">
+            <div class="stat-card">
+                <div class="stat-value">91</div>
+                <div class="stat-label">Minuti Medi<br>Totali</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">55</div>
+                <div class="stat-label">Minuti Medi<br>Chirurgici</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">36</div>
+                <div class="stat-label">Minuti Medi<br>Preparazione</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">60%</div>
+                <div class="stat-label">Ratio Medio<br>Chirurgico</div>
+            </div>
+        </div>
+        
+        <div class="chart-grid">
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Tempi Medi: Totale vs Chirurgico</h3>
+                </div>
+                <div class="chart-box">
+                    <canvas id="opTempiMediTotaleChirurgicoChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Range Temporali (Min-Max)</h3>
+                </div>
+                <div class="chart-box">
+                    <canvas id="opTempiRangeMinMaxChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chart-grid">
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Composizione Tempo (Preparazione vs Chirurgia)</h3>
+                </div>
+                <div class="chart-box">
+                    <canvas id="opTempiComposizioneChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Breakdown Temporale per Intervento</h3>
+                </div>
+                <div class="chart-box">
+                    <canvas id="opTempiBreakdownChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="findings">
+            <h3>Interventi per Durata e Variabilità</h3>
+            
+            <div class="intervento-detail alta-variabilita">
+                <strong>PROSTATECTOMIA TRANSURETRALE</strong> (UROLOGIA n=19)<br>
+                Totale: 99±39min (45-225min) | Chirurgico: 62±38min | Range: 180min<br>
+                <em>ALTA VARIABILITÀ: Stesso intervento può durare 45min o 4 ore</em>
+            </div>
+            
+            <div class="intervento-detail alta-variabilita">
+                <strong>RESEZIONE VESCICA</strong> (UROLOGIA n=19)<br>
+                Totale: 65±30min (22-115min) | Chirurgico: 31±19min | Range: 93min<br>
+                <em>ALTA VARIABILITÀ: Da 22min a quasi 2 ore per stesso tipo</em>
+            </div>
+            
+            <div class="intervento-detail alta-variabilita">
+                <strong>COLECISTECTOMIA LAPAROSCOPICA</strong> (CHIRURGIA n=14)<br>
+                Totale: 107±41min (65-240min) | Chirurgico: 64±26min | Range: 175min<br>
+                <em>ALTA VARIABILITÀ: Può durare 1 ora o 4 ore</em>
+            </div>
+            
+            <div class="intervento-detail media-variabilita">
+                <strong>URETEROSCOPIA</strong> (UROLOGIA n=15)<br>
+                Totale: 100±27min (50-140min) | Chirurgico: 63±29min | Range: 90min<br>
+                <em>MEDIA VARIABILITÀ: Range contenuto in 1.5 ore</em>
+            </div>
+            
+            <div class="intervento-detail bassa-variabilita">
+                <strong>SOSTITUZIONE ANCA</strong> (ORTOPEDIA n=11)<br>
+                Totale: 140±20min (100-180min) | Chirurgico: 86±11min | Range: 80min<br>
+                <em>BASSA VARIABILITÀ: Range prevedibile 1h20min-3h</em>
+            </div>
+            
+            <div class="intervento-detail bassa-variabilita">
+                <strong>TAGLIO CESAREO</strong> (GINECOLOGIA n=17)<br>
+                Totale: 71±12min (55-95min) | Chirurgico: 41±7min | Range: 40min<br>
+                <em>BASSA VARIABILITÀ: Tempi molto stabili 55-95min</em>
+            </div>
+        </div>
+    `;
+
+    const dashboardContent = document.getElementById('operationalDashboardContent');
+    dashboardContent.innerHTML = content;
+
+    const canvasIds = [
+        'opTempiMediTotaleChirurgicoChart',
+        'opTempiRangeMinMaxChart',
+        'opTempiComposizioneChart',
+        'opTempiBreakdownChart'
+    ];
+    
+    canvasIds.forEach(id => distruggiGrafico(id));
+
+    requestAnimationFrame(() => {
+        creaOpTempiMediTotaleChirurgico();
+        creaOpTempiRangeMinMax();
+        creaOpTempiComposizione();
+        creaOpTempiBreakdown();
+    });
+}
+
+function creaOperationalUtilizzoContent() {
+    const content = `
+        <div class="selected-specialty-header">
+            <div class="selected-specialty-title">
+                <i class="fas fa-door-open"></i>
+                Analisi Utilizzo Sale
+            </div>
+            <p><strong>Dataset filtrato: 378 interventi | Sale 2,3,4,5,6,7 | No Weekend | No Urgenze >14:30</strong></p>
+        </div>
+        
+        <div class="stat-grid">
+            <div class="stat-card">
+                <div class="stat-value">78.1%</div>
+                <div class="stat-label">Utilizzo Medio</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">16.1%</div>
+                <div class="stat-label">Tasso Urgenze</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">5 su 6</div>
+                <div class="stat-label">Sale Range Ottimale</div>
+            </div>
+        </div>
+        
+        <div class="chart-grid">
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Confronto utilizzo sala operatoria</h3>
+                </div>
+                <div class="chart-box">
+                    <canvas id="opUtilizzoConfrontoChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Utilizzo Sale (dataset filtrato)</h3>
+                </div>
+                <div class="chart-box">
+                    <canvas id="opUtilizzoSaleFiltroChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chart-grid">
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Tipo di intervento</h3>
+                </div>
+                <div class="chart-box">
+                    <canvas id="opUtilizzoTipoInterventoChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Urgenze Residue per Sala</h3>
+                </div>
+                <div class="chart-box">
+                    <canvas id="opUtilizzoUrgenzeResidueChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparison">
+            <h3>Confronto con/senza urgenze</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <h4>PRIMA (con urgenze >14:30)</h4>
+                    <ul>
+                        <li>403 interventi</li>
+                        <li>Utilizzo medio: <strong>81.1%</strong></li>
+                        <li>Sale sovraccariche: <strong>2</strong> (Sala 4: 100.7%)</li>
+                        <li>Tasso urgenze: <strong>21.3%</strong></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>DOPO (dataset filtrato)</h4>
+                    <ul>
+                        <li>378 interventi (-25)</li>
+                        <li>Utilizzo medio: <strong>78.1%</strong> (-3.0pp)</li>
+                        <li>Sale sovraccariche: <strong>0</strong> ✓</li>
+                        <li>Tasso urgenze: <strong>16.1%</strong> (-5.2pp)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const dashboardContent = document.getElementById('operationalDashboardContent');
+    dashboardContent.innerHTML = content;
+
+    const canvasIds = [
+        'opUtilizzoConfrontoChart',
+        'opUtilizzoSaleFiltroChart',
+        'opUtilizzoTipoInterventoChart',
+        'opUtilizzoUrgenzeResidueChart'
+    ];
+    
+    canvasIds.forEach(id => distruggiGrafico(id));
+
+    requestAnimationFrame(() => {
+        creaOpUtilizzoConfronto();
+        creaOpUtilizzoSaleFiltro();
+        creaOpUtilizzoTipoIntervento();
+        creaOpUtilizzoUrgenzeResidue();
+    });
+}
+
+// Chart creation functions for operational section
+function creaOpTurnoverDistribuzioneFasce() {
+    return creaGrafico('opTurnoverDistribuzioneFasceChart', {
+        type: 'doughnut',
+        data: {
+            labels: turnoverDataGlobale.distribuzione.map(d => d.nome),
+            datasets: [{
+                data: turnoverDataGlobale.distribuzione.map(d => d.count),
+                backgroundColor: turnoverDataGlobale.distribuzione.map(d => d.colore)
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'right' }
+            }
+        }
+    });
+}
+
+function creaOpTurnoverMedioSale() {
+    return creaGrafico('opTurnoverMedioSaleChart', {
+        type: 'bar',
+        data: {
+            labels: turnoverDataGlobale.sale.map(s => `Sala ${s}`),
+            datasets: [{
+                label: 'Turnover Medio (min)',
+                data: turnoverDataGlobale.medie,
+                backgroundColor: '#3498db',
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { text: 'Minuti' }
+                }
+            }
+        }
+    });
+}
+
+function creaOpTurnoverNumeroSala() {
+    return creaGrafico('opTurnoverNumeroSalaChart', {
+        type: 'bar',
+        data: {
+            labels: turnoverDataGlobale.sale.map(s => `Sala ${s}`),
+            datasets: [{
+                label: 'Numero Turnover',
+                data: turnoverDataGlobale.counts,
+                backgroundColor: '#2ecc71',
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { text: 'Numero Turnover' }
+                }
+            }
+        }
+    });
+}
+
+function creaOpTurnoverIstogramma() {
+    const simulatedData = [22, 42, 30, 27, 22, 20, 18, 12, 8, 7, 5, 3];
+    const labels = [];
+    
+    for (let i = 0; i <= 120; i += 10) {
+        labels.push(`${i}-${i+9}`);
+    }
+    
+    return creaGrafico('opTurnoverIstogrammaChart', {
+        type: 'bar',
+        data: {
+            labels: labels.slice(0, 12),
+            datasets: [{
+                label: 'Frequenza',
+                data: simulatedData,
+                backgroundColor: '#3498db',
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { text: 'Numero Casi' }
+                },
+                x: {
+                    title: { text: 'Minuti' }
+                }
+            }
+        }
+    });
+}
+
+function creaOpTimingDistribuzioneOrari() {
+    return creaGrafico('opTimingDistribuzioneOrariChart', {
+        type: 'bar',
+        data: {
+            labels: primiInterventiDataGlobali.fasce,
+            datasets: [{
+                label: 'Primi interventi',
+                data: primiInterventiDataGlobali.counts,
+                backgroundColor: ['#f39c12', '#e74c3c', '#c0392b'],
+                borderRadius: 6,
+                maxBarThickness: 100
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Focus Timing Mattutino (8:00-10:59)',
+                    font: { size: 16, weight: 'bold' }
+                },
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { text: 'Numero Primi Interventi' },
+                    max: 90
+                },
+                x: {
+                    title: { text: 'Fascia Oraria' }
+                }
+            }
+        }
+    });
+}
+
+function creaOpTimingDettaglioFascia() {
+    return creaGrafico('opTimingDettaglioFasciaChart', {
+        type: 'bar',
+        data: {
+            labels: primiInterventiDataGlobali.sottofasce,
+            datasets: [{
+                label: 'Primi interventi',
+                data: primiInterventiDataGlobali.sottofasceCounts,
+                backgroundColor: ['#f1c40f', '#f39c12', '#e67e22', '#d35400', '#e74c3c', '#c0392b', '#8e44ad'],
+                borderRadius: 4,
+                maxBarThickness: 60
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Concentrazione verso 8:45 (29 casi)',
+                    font: { size: 16, weight: 'bold' }
+                },
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { text: 'Numero Primi Interventi' }
+                },
+                x: {
+                    title: { text: 'Sottofasce (15 min)' }
+                }
+            }
+        }
+    });
+}
+
+function creaOpTimingRitardi() {
+    return creaGrafico('opTimingRitardiChart', {
+        type: 'bar',
+        data: {
+            labels: primiInterventiDataGlobali.ritardi,
+            datasets: [{
+                label: 'Numero casi',
+                data: primiInterventiDataGlobali.ritardiCounts,
+                backgroundColor: ['#27ae60', '#f1c40f', '#f39c12', '#e74c3c', '#c0392b', '#8e44ad'],
+                borderRadius: 6,
+                maxBarThickness: 80
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Ritardi Rispetto alla Programmazione 8:00',
+                    font: { size: 16, weight: 'bold' }
+                },
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        afterLabel: function(context) {
+                            const percentuale = (context.parsed.y / 101 * 100).toFixed(1);
+                            return `${percentuale}% del totale`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { text: 'Numero Primi Interventi' }
+                },
+                x: {
+                    title: { text: 'Fascia Ritardo' }
+                }
+            }
+        }
+    });
+}
+
+function creaOpTempiMediTotaleChirurgico() {
+    return creaGrafico('opTempiMediTotaleChirurgicoChart', {
+        type: 'bar',
+        data: {
+            labels: tempiOperatoriGlobali.map(i => i.nome),
+            datasets: [
+                {
+                    label: 'Tempo Totale (min)',
+                    data: tempiOperatoriGlobali.map(i => i.tempoTotale),
+                    backgroundColor: '#3498db',
+                    borderRadius: 4
+                },
+                {
+                    label: 'Tempo Chirurgico (min)',
+                    data: tempiOperatoriGlobali.map(i => i.tempoChirurgico),
+                    backgroundColor: '#e74c3c',
+                    borderRadius: 4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { text: 'Minuti' }
+                }
+            }
+        }
+    });
+}
+
+function creaOpTempiRangeMinMax() {
+    return creaGrafico('opTempiRangeMinMaxChart', {
+        type: 'bar',
+        data: {
+            labels: tempiOperatoriGlobali.map(i => i.nome),
+            datasets: [
+                {
+                    label: 'Tempo Minimo',
+                    data: [45, 22, 65, 50, 100, 55, 100],
+                    backgroundColor: '#27ae60',
+                    borderRadius: 4
+                },
+                {
+                    label: 'Tempo Massimo',
+                    data: [225, 115, 240, 140, 180, 95, 180],
+                    backgroundColor: '#e74c3c',
+                    borderRadius: 4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'top' }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { text: 'Tempo (minuti)' }
+                },
+                x: {
+                    ticks: { maxRotation: 45 }
+                }
+            }
+        }
+    });
+}
+
+function creaOpTempiComposizione() {
+    return creaGrafico('opTempiComposizioneChart', {
+        type: 'bar',
+        data: {
+            labels: tempiOperatoriGlobali.map(i => i.nome),
+            datasets: [
+                {
+                    label: 'Tempo Preparazione + Chiusura',
+                    data: tempiOperatoriGlobali.map(i => i.tempoTotale - i.tempoChirurgico),
+                    backgroundColor: '#95a5a6',
+                    borderRadius: 4
+                },
+                {
+                    label: 'Tempo Chirurgico Effettivo',
+                    data: tempiOperatoriGlobali.map(i => i.tempoChirurgico),
+                    backgroundColor: '#e74c3c',
+                    borderRadius: 4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'top' }
+            },
+            scales: {
+                x: { stacked: true },
+                y: {
+                    stacked: true,
+                    beginAtZero: true,
+                    title: { text: 'Tempo (minuti)' }
+                }
+            }
+        }
+    });
+}
+
+function creaOpTempiBreakdown() {
+    const interventiWaterfall = [...tempiOperatoriGlobali].sort((a, b) => a.tempoTotale - b.tempoTotale);
+    
+    return creaGrafico('opTempiBreakdownChart', {
+        type: 'bar',
+        data: {
+            labels: interventiWaterfall.map(i => i.nome),
+            datasets: [{
+                label: 'Durata Totale Media',
+                data: interventiWaterfall.map(i => i.tempoTotale),
+                backgroundColor: interventiWaterfall.map(i => {
+                    const range = i.tempoTotale - i.tempoChirurgico;
+                    if (range > 60) return '#e74c3c';
+                    if (range > 30) return '#f39c12';
+                    return '#27ae60';
+                }),
+                borderRadius: 6,
+                borderWidth: 0.3,
+                borderColor: '#2c3e50'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { text: 'Durata Media (minuti)' }
+                },
+                x: {
+                    ticks: { maxRotation: 45 }
+                }
+            }
+        }
+    });
+}
+
+function creaOpUtilizzoConfronto() {
+    return creaGrafico('opUtilizzoConfrontoChart', {
+        type: 'bar',
+        data: {
+            labels: utilizzoSaleDataGlobale.map(s => `Sala ${s.sala}`),
+            datasets: [
+                {
+                    label: 'Prima (con urgenze)',
+                    data: utilizzoSaleDataGlobale.map(s => s.precedente),
+                    backgroundColor: '#e74c3c',
+                    borderRadius: 4
+                },
+                {
+                    label: 'Dopo (senza urgenze)',
+                    data: utilizzoSaleDataGlobale.map(s => s.pulito),
+                    backgroundColor: '#27ae60',
+                    borderRadius: 4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 110,
+                    title: { text: 'Utilizzo %' },
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function creaOpUtilizzoSaleFiltro() {
+    return creaGrafico('opUtilizzoSaleFiltroChart', {
+        type: 'bar',
+        data: {
+            labels: utilizzoSaleDataGlobale.map(s => `Sala ${s.sala}`),
+            datasets: [{
+                label: 'Utilizzo %',
+                data: utilizzoSaleDataGlobale.map(s => s.pulito),
+                backgroundColor: utilizzoSaleDataGlobale.map(s => {
+                    if (s.pulito >= 70 && s.pulito <= 90) return '#27ae60';
+                    if (s.pulito < 70) return '#f39c12';
+                    return '#e74c3c';
+                }),
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    title: { text: 'Utilizzo %' },
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function creaOpUtilizzoTipoIntervento() {
+    return creaGrafico('opUtilizzoTipoInterventoChart', {
+        type: 'doughnut',
+        data: {
+            labels: tipiInterventoDataGlobale.map(t => t.tipo),
+            datasets: [{
+                data: tipiInterventoDataGlobale.map(t => t.volume),
+                backgroundColor: ['#27ae60', '#f39c12', '#e74c3c', '#9b59b6'],
+                borderWidth: 3,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const item = tipiInterventoDataGlobale[context.dataIndex];
+                            return `${item.tipo}: ${item.volume} (${item.percentuale}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function creaOpUtilizzoUrgenzeResidue() {
+    return creaGrafico('opUtilizzoUrgenzeResidueChart', {
+        type: 'bar',
+        data: {
+            labels: urgenzeResidueDataGlobale.map(u => `Sala ${u.sala}`),
+            datasets: [{
+                label: 'Urgenze Residue',
+                data: urgenzeResidueDataGlobale.map(u => u.urgenze),
+                backgroundColor: '#e74c3c',
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { text: 'Numero Urgenze' }
+                }
+            }
+        }
+    });
+}
+
+        // ============================
         // Gestione sezione specialità
         // ============================
         
@@ -3000,6 +3667,18 @@
             document.querySelector('.specialty-button[data-specialty="OVERVIEW"]').classList.add('active');
             creaSpecialitaOverviewContent();
         });
+
+        // Gestione interattività della sezione operativa
+document.querySelectorAll('.operational-button').forEach(button => {
+    button.addEventListener('click', function() {
+        selezionaOperational(this.dataset.operational);
+    });
+});
+
+// Imposta stato iniziale sezione operativa
+document.querySelector('.operational-button[data-operational="turnover"]').classList.add('active');
+selezionaOperational('turnover');
+
     </script>
 </body>
 
